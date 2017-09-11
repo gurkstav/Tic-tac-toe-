@@ -22,27 +22,26 @@ class MainRun(object):
         self.display_height = display_height
         self.Main()
 
+    def draw_main_menu(self):
+        button_list = []
+        button_list.append(Button("start_local",display_width/2.25, (display_height/5)*3 , 50, 50, "placeholder.png"))
+        button_list.append(Button("Quit",       display_width/2.25, (display_height/5)*4 , 50, 50, "placeholder.png"))
+        for item in button_list:
+            item.draw(window)
+
     def Main(self):
         quit = False
-
         window.fill((background_color[0],background_color[1],background_color[2]))
-
-        button_list = []
-        button_list.append(Button("Quit",display_width/2.25, display_height/4, 50, 50, "placeholder.png"))
-        button_list[0].draw(window)
+        self.draw_main_menu()
 
         while not quit:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    window.fill((255,255,255)) #Tuple for filling display... Current is white
                     quit = True
 
-            #Remember to update your clock and display at the end
+            #Remember to update clock....
             pygame.display.update()
             windowclock.tick(60)
-
-
-
 
 if  __name__ =='__main__':
     MainRun(display_width,display_height)
