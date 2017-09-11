@@ -48,7 +48,7 @@ class game_engine(object):
     try:
       place = int(place) - 1
       if self.current_OX[place] != 0:
-        self._assign_value(raw_input("Already exsits! Choose again:"))
+        self._assign_value(input("Already exsits! Choose again:"))
 
       else:
         if self.user_use == self.O:
@@ -56,7 +56,7 @@ class game_engine(object):
         else:
           self.current_OX[place] = self.X
     except:
-      self._assign_value(raw_input("Out of range or invalid input! Choose again:"))
+      self._assign_value(input("Out of range or invalid input! Choose again:"))
 
   def _win_line_recode(self,end_flag,who_win,which_line):
     self.end_game = end_flag
@@ -206,16 +206,16 @@ class game_engine(object):
   def play(self):
     """The whole section will be replaced so as to connect to GUI"""
 
-    self._be_first(raw_input("Do you want to play first? \
+    self._be_first(input("Do you want to play first? \
       \n(\"y\" for yes or \"n\" for no, default is y, other input will be ingored) "))
     
-    self._change_use(raw_input("Which symbolic you want to use? \
+    self._change_use(input("Which symbolic you want to use? \
       \n(\"o\" for O or \"x\" for X, default is O, other input will be ingored) "))
     
     print("Enter the number to put your symbolic")
     self._intro()
     
-    raw_input("Now press Enter to start the game!")
+    input("Now press Enter to start the game!")
     os.system('clear')
 
     if self.first_put == 1:
@@ -225,7 +225,7 @@ class game_engine(object):
 
 
       while(True):
-        self._assign_value(raw_input())
+        self._assign_value(input())
         if (self._compute_output()):
           os.system('clear')
           if self.winner == self.user_use:
@@ -290,7 +290,7 @@ class game_engine(object):
               print(block,end="")
 
 
-        self._assign_value(raw_input())
+        self._assign_value(input())
         os.system('clear')
         if (self._compute_output()):
           if self.winner == self.user_use:
