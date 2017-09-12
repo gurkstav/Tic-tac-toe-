@@ -15,10 +15,11 @@ class Button:
 
     def draw(self, surface):
         toDraw = self.pg.image.load(self.background_image).convert_alpha()
+        toDraw = self.pg.transform.scale(toDraw, (self.width, self.height))
         surface.blit(toDraw, (self.left, self.top))
 
     def click(self):
-        pos = pygame.mouse.get_pos()
+        pos = self.pg.mouse.get_pos()
         if self.rect.collidepoint(pos):
             return True
         else:
