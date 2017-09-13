@@ -8,7 +8,7 @@ class game_engine(object):
   def __init__(self):
     """
     Initial setting of current game:
-    end_game: True when have a winner, False for no or not yet.
+    end_game: True when the match is over (draw or someone win), False for no or not yet.
     current_OX: 0 means have not been place thing, 1 means O and -1 means X.
     first_put: let user define wheather to play first (1) or not (0), 
       default is play first.
