@@ -40,6 +40,7 @@ class MainRun(object):
 
         #os.system('cls')  # on windows
         os.system('clear')  # on linux / os x
+        print ("\033c") #Unknown compability but should work on most bash, if windows, please test
         return answer[0]
 
 
@@ -77,14 +78,14 @@ class MainRun(object):
         """
         print ("Change Player Name \n\nPlease enter a new name and then press enter to confirm. \n\nNew name:")
         answer = ""
-        print(prompt)
         while not answer:
             answer = input()
         #TODO: someModule.set_new_player_name(answer)
         self.main_menu = True
         self.change_name = False
         #os.system('cls')  # on windows
-        os.system('clear')  # on linux / os x
+        #os.system('clear')  # on linux / os x
+        print ("\033c") #Unknown compability but should work on most bash, if windows, please test
 
 
 
@@ -123,7 +124,8 @@ class MainRun(object):
             pass
         
         #os.system('cls')  # on windows
-        os.system('clear')  # on linux / os x
+        #os.system('clear')  # on linux / os x
+        print ("\033c") #Unknown compability but should work on most bash, if windows, please test
 
 
 
@@ -136,6 +138,7 @@ class MainRun(object):
         start a new game or quit the seesion.
         :return: Returns nothing.
         """
+        print ("\033c") #Unknown compability but should work on most bash, if windows, please test
         welcome_message = "Welcome to Tic-Tac-Toe. \nMenus are navigated by entering the key inside the [ ] on each alternative\n\n\n"
         print (welcome_message)
         while not self.quit:
@@ -147,7 +150,8 @@ class MainRun(object):
                 self.set_start_game()
             pass
         #os.system('cls')  # on windows
-        os.system('clear')  # on linux / os x
+        #os.system('clear')  # on linux / os x
+        print ("\033c") #Unknown compability but should work on most bash, if windows, please test
         print("Sad to see you go!")
 
 if  __name__ =='__main__':
