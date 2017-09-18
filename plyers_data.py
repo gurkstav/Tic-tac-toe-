@@ -6,7 +6,7 @@ class players_data(object):
 
   def __init__(self):
     """
-    Name of main player is written a specific function, basicaly is the same as setNewPlayerName.
+    Name of main player is written in a specific function, basicaly is the same as setNewPlayerName.
     Name of main player is set as 'Player1' defaultly
     player_list is used to return player's name according to index (set do not have index)    
     """
@@ -35,6 +35,7 @@ class players_data(object):
   def setMainPlayerName(self, name):
     name_valid, current_message = self._name_process(name)
     if name_valid is True:
+      current_message = "Main player's name is set as \'" + name "\'!"
       self.player_set.remove(self.main_player)
       self.player_set.add(name)
       self.main_player = name
@@ -55,8 +56,8 @@ class players_data(object):
   def getPlayerName(self, player_num):
     try:
       if (player_num-1) < 0 or (player_num-1) >= len(self.player_list):
-        return "Out of the range of player"  
+        return "Out of the range of the player list/"  
       else: 
         return self.player_list[player_num -1]
     except:
-      return "Please input player's number"
+      return "Please input player's number (nNmeric)"
