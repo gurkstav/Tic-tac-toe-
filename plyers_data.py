@@ -35,7 +35,7 @@ class players_data(object):
   def setMainPlayerName(self, name):
     name_valid, current_message = self._name_process(name)
     if name_valid is True:
-      current_message = "Main player's name is set as \'" + name "\'!"
+      current_message = "Main player's name is set as \'" + name +"\'!"
       self.player_set.remove(self.main_player)
       self.player_set.add(name)
       self.main_player = name
