@@ -1,4 +1,3 @@
-from __future__ import print_function
 import re
 
 class players_data(object):
@@ -6,7 +5,8 @@ class players_data(object):
 
   def __init__(self):
     """
-    Name of main player is written in a specific function, basicaly is the same as setNewPlayerName.
+    Name of main player is written in a specific function, basicaly is the same 
+    as setNewPlayerName.
     Name of main player is set as 'Player1' defaultly
     player_list is used to return player's name according to index (set do not have index)    
     """
@@ -61,3 +61,39 @@ class players_data(object):
         return self.player_list[player_num -1]
     except:
       return "Please input player's number (nNmeric)"
+
+  """
+  This part is desined to make sure the program will not been crashed by some situation.
+  Also, some functions are provided if we want to use.
+  """
+
+  def deletePlayerSet(self):
+    """
+    When press back, delete all players except main player.
+    It is desined because main user can chage his/her name whenever he/she want.
+    """
+    self.player_list = [self.main_player]
+    self.player_set = {self.main_player}
+
+  def remainTornamentPlayer(self):
+    """
+    Before use the deletePlayerSet, using this function can remain players except 
+    main player.
+    """
+    self.last_time_players = set(self.player_set)
+    self.last_time_players.remove(self.main_player)
+  
+  def reloadTornamentPlayer(self):
+    """
+    Once useing deletePlayerSet, this function can help to check whether there is a
+    confliction between the remained tornament Players and main player(if changed).
+    Besides, reload to the players set.
+    """
+    current_message = "Reload players last time successfully"
+    for player in self.last_time_players:
+      if self.main_player is player:
+        current_message = "Reload players and remove a player last time, who is named the same as main player now"
+      else:
+        self.player_set.add(name)
+        self.player_list.append(name)
+    return current_message
