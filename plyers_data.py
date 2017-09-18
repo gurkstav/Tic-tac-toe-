@@ -89,11 +89,14 @@ class players_data(object):
     confliction between the remained tornament Players and main player(if changed).
     Besides, reload to the players set.
     """
-    current_message = "Reload players last time successfully"
-    for player in self.last_time_players:
-      if self.main_player is player:
-        current_message = "Reload players and remove a player last time, who is named the same as main player now"
-      else:
-        self.player_set.add(name)
-        self.player_list.append(name)
+    try:
+      current_message = "Reload players last time successfully"
+      for player in self.last_time_players:
+        if self.main_player is player:
+          current_message = "Reload players and remove a player last time, who is named the same as main player now"
+        else:
+          self.player_set.add(name)
+          self.player_list.append(name)
+    except:
+      current_message = "No tornament players have been set before"
     return current_message
