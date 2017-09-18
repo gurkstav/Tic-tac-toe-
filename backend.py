@@ -152,6 +152,7 @@ class backend(object):
         while index < len(leaderboard):
           if score > leaderboard[index][1]:
             leaderboard.insert(index, [name, score])
+            break
           index += 1
     return leaderboard
       
