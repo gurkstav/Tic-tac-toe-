@@ -12,7 +12,6 @@ class Button:
         self.rect = pygame.rect.Rect((left,top, width, height))
         self.buttonSurface = self.pg.Surface((self.width, self.height))
 
-
     def draw(self, surface):
         toDraw = self.pg.image.load(self.background_image).convert_alpha()
         toDraw = self.pg.transform.scale(toDraw, (self.width, self.height))
