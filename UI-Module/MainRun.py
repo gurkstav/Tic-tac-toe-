@@ -1,7 +1,6 @@
 import sys
 import os
 
-
 class MainRun(object):
     """
     MainRun is the main menu and the class with the main() method.
@@ -22,9 +21,6 @@ class MainRun(object):
         self.start_game = False
         self.quit = False
         self.Main()
-
-
-    
     
     def ask_action(self,prompt):
         """
@@ -36,17 +32,13 @@ class MainRun(object):
         answer = ""
         print(prompt)
         while not answer:
-            answer = input()
+        answer = input()
 
         #os.system('cls')  # on windows
         os.system('clear')  # on linux / os x
         print ("\033c") #Unknown compability but should work on most bash, if windows, please test
         return answer[0]
 
-
-
-
-    
     def set_main_menu(self):
         """
         Purpose is to draw main menu and give the use a choice of where to procced.
@@ -58,16 +50,10 @@ class MainRun(object):
         self.start_game = False
         if answer == "n":
             self.change_name = True
-            
         elif answer == "s":
-            self.start_game = True
-          
+            self.start_game = True  
         elif answer == "q":
             self.quit = True
-
-
-
-
             
     def set_change_name(self):
         """
@@ -79,18 +65,15 @@ class MainRun(object):
         print ("Change Player Name \n\nPlease enter a new name and then press enter to confirm. \n\nNew name:")
         answer = ""
         while not answer:
-            answer = input()
+        answer = input()
+        
         #TODO: someModule.set_new_player_name(answer)
         self.main_menu = True
         self.change_name = False
         #os.system('cls')  # on windows
         #os.system('clear')  # on linux / os x
         print ("\033c") #Unknown compability but should work on most bash, if windows, please test
-
-
-
-
-        
+       
     def set_start_game(self):
         """
         Presents the player with the menu where he or she can start a new game in various forms.
@@ -125,11 +108,7 @@ class MainRun(object):
         
         #os.system('cls')  # on windows
         #os.system('clear')  # on linux / os x
-        print ("\033c") #Unknown compability but should work on most bash, if windows, please test
-
-
-
-        
+        print ("\033c") #Unknown compability but should work on most bash, if windows, please test     
     
     def Main(self):
         """
