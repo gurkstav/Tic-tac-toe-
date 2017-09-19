@@ -1,7 +1,6 @@
 import sys
 import os
 
-
 class MainRun(object):
     def __init__(self):
         self.main_menu = True
@@ -21,7 +20,6 @@ class MainRun(object):
 
     #    if test.lower() == "q":
     #        self.quit = False
-
 
     def Main(self):
         welcome_message = "Welcome to Tic-Tac-Toe. Menus are navigated by entering the key inside the [ ] on each alternative"
