@@ -73,8 +73,8 @@ class Backend(object):
     return self.player_list
 
   def getNextMatch(self):
-    if self.in_tournament is True and next_match_num < len(self.player_list)*(len(self.player_list)-1):
-      return getPlayerName(self.match_list[self.next_match_num][0]), getPlayerName(self.match_list[self.next_match_num][1])
+    if self.in_tournament is True and self.next_match_num < len(self.player_list)*(len(self.player_list)-1):
+      return self.getPlayerName(self.match_list[self.next_match_num][0]), self.getPlayerName(self.match_list[self.next_match_num][1])
     else:
       return "", ""
 
@@ -83,7 +83,7 @@ class Backend(object):
     return True
     
   def startTournament(self):
-    if self.in_tournament is True:
+    if self.in_tournament is False:
       if len(self.player_list) < 2:
         return False, "Cannot start a tournament with less than 2 players!"
       else:
@@ -99,11 +99,11 @@ class Backend(object):
             player2num = y+x
             while player2num >= len(self.player_list):
               player2num -= len(self.player_list)
-            matchlist.append([y, player2num])
+            self.match_list.append([y, player2num])
         """ Generate the second half of the match list by mirroring the first """
         for x in range(0, len(self.player_list)*(len(self.player_list)-1)-1):
-          matchlist.append([matchlist[x][1], matchlist[x][0]]) 
-        return True, self._name_process(name)
+          self.match_list.append([self.match_list[x][1], self.match_list[x][0]]) 
+        return True, self._name_process(self.main_player)
     else:
       return False, "The tournament has already been started!"
 
@@ -126,7 +126,7 @@ class Backend(object):
   def getLeaderboard(self):
     leaderboard = []
     for x in range(0, len(self.player_list)):
-      name = getPlayerName(x)
+      name = self.getPlayerName(x)
       score = 0;
       """ compute score for home games """ 
       for y in range(0, len(self.player_list)):

@@ -64,7 +64,7 @@ class Tournament(object):
         no_games = "x" #TODO forgot if rematch was a thing
         print ("Tournament \n\nYour options: \n\n[A] Add New Player")
         if can_start:
-            print ("[S] Start Tournament ("+str(no_player)+" players → "+str(no_games)+" games)")
+            print ("[S] Start Tournament ("+str(no_player)+" players → "+no_games+" games)")
         print ("[B] Back \n[Q] Quit \n\nPlayers in tournament so far:\n")
         self.print_players()
 
@@ -99,7 +99,7 @@ class Tournament(object):
         while not answer:
             answer = input()
             self.tournament = True
-            self.addNewPlayer = False
+            self.addNewPlayer = True
         self.backend.addNewPlayerName(answer)
         os.system('clear')  # on linux / os x        
         
