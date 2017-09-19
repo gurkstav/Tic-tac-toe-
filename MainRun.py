@@ -3,18 +3,23 @@ from Button import *
 
 pygame.init()
 
-#Window Resolution
+"""
+Window Resolution
+"""
 display_width  = 1024
 display_height = 768
 background_color = [255,255,0]
 window = pygame.display.set_mode((display_width,display_height))
 
-#Clock
+"""
+Clock
+"""
 windowclock = pygame.time.Clock()
 
-#Load other things such as images and sound files here
-#background = pygame.image.load("background.png").convert #Use conver_alpha() for images with transparency
-
+"""
+Load other things such as images and sound files here
+background = pygame.image.load("background.png").convert #Use conver_alpha() for images with transparency
+"""
 
 class MainRun(object):
     def __init__(self,display_width,display_height):
@@ -50,11 +55,9 @@ class MainRun(object):
                 print(button.name)
                 pass
 
-
     def Main(self):
         button_list = []
-
-
+        
         window.fill((background_color[0],background_color[1],background_color[2]))
         self.draw_main_menu(button_list)
 
@@ -63,7 +66,9 @@ class MainRun(object):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.respond_event(button_list)
 
-            #Remember to update clock....
+            """
+            Remember to update clock....
+            """
             pygame.display.update()
             windowclock.tick(60)
 
