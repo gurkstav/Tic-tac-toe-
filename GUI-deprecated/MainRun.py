@@ -59,7 +59,6 @@ class MainRun(object):
                 print(button.name)
                 pass
 
-
     def Main(self):
         #Clock
         windowclock = pygame.time.Clock()
