@@ -3,7 +3,9 @@ import random
 import os
 
 class game_engine(object):
-  """A class to handle gamming process."""
+  """
+  A class to handle gamming process.
+  """
 
   def __init__(self):
     """
@@ -11,11 +13,12 @@ class game_engine(object):
     end_game: True when the match is over (draw or someone win), False for no or not yet.
     current_OX: 0 means have not been place thing, 1 means O and -1 means X.
     first_put: let user define wheather to play first (1) or not (0), 
-      default is play first.
+    default is play first.
     user_use: let user choose symbolic, O (1) or X (0), default is O.
     win_line: to recode which line win in block level.
     winner: player win is 1, computer win is -1 and draw is the same as default 0.
     """
+    
     self.current_OX = 9*[0]
     self.end_game = False
     self.first_put = 1
@@ -26,7 +29,9 @@ class game_engine(object):
     self.winner = 0
 
   def _be_first(self,user_or_cpu):
-    """This part will be connected to GUI in the future"""
+    """
+    This part will be connected to GUI in the future
+    """
     if user_or_cpu.lower() == "y":
       self.first_put = 1
     elif user_or_cpu.lower() =="n":
@@ -35,7 +40,9 @@ class game_engine(object):
       pass
 
   def _change_use(self,X_or_O):
-    """This part will be connected to GUI in the future"""
+    """
+    This part will be connected to GUI in the future
+    """
     if X_or_O.lower() == "o":
       self.user_use = self.O
     elif X_or_O.lower() == "x":
@@ -44,12 +51,13 @@ class game_engine(object):
       pass
 
   def _assign_value(self,place):
-    """Assign user's desicion"""
+    """
+    Assign user's desicion
+    """
     try:
       place = int(place) - 1
       if self.current_OX[place] != 0:
         self._assign_value(input("Already exsits! Choose again:"))
-
       else:
         if self.user_use == self.O:
           self.current_OX[place] = self.O
@@ -129,7 +137,9 @@ class game_engine(object):
     return self.end_game
     
   def show_game(self):
-    """This part will be replaced to GUI in the future"""
+    """
+    This part will be replaced to GUI in the future
+    """
     
     show_up_list = []
     for x in range(len(self.current_OX)):
@@ -148,15 +158,21 @@ class game_engine(object):
     return show_up_list
   
   def display_result(self):
-    """This part will be raplaced to GUI"""
+    """
+    This part will be raplaced to GUI
+    """
     
-    """Summary of result"""
+    """
+    Summary of result
+    """
     if self.winner is self.user_use:
       print('\033[1;31m' + "You win!" + '\033[0m')
     elif self.winner != 0:
       print("CPU win!")
     
-    """Highlight the line"""
+    """
+    Highlight the line
+    """
     for x in range(len(self.current_OX)):
       if x in self.win_line:
         if self.current_OX[x] == self.X:
@@ -180,7 +196,9 @@ class game_engine(object):
     print()
 
   def cpu_put(self):
-    """Here only apply random seletion, we can develop some fancy strategy in the future"""
+    """
+    Here only apply random seletion, we can develop some fancy strategy in the future
+    """
     cpu_select_set = []
     for element in self.current_OX:
       if element == 0:
@@ -193,7 +211,9 @@ class game_engine(object):
       self.current_OX[cpu_select_place] = self.O
   
   def _intro(self):
-    """A basic tutorial of how to playing tic-tac-toe"""
+    """
+    A basic tutorial of how to playing tic-tac-toe
+    """
     for x in range(len(self.current_OX)):
       print("",x+1,"",end="")
       if x != len(self.current_OX)-1:
@@ -204,7 +224,9 @@ class game_engine(object):
     print()
 
   def play(self):
-    """The whole section will be replaced so as to connect to GUI"""
+    """
+    The whole section will be replaced so as to connect to GUI
+    """
 
     self._be_first(input("Do you want to play first? \
       \n(\"y\" for yes or \"n\" for no, default is y, other input will be ingored) "))
@@ -223,7 +245,6 @@ class game_engine(object):
       for block in self.show_game():
         print(block,end="")
 
-
       while(True):
         self._assign_value(input())
         if (self._compute_output()):
@@ -234,17 +255,13 @@ class game_engine(object):
             os.system('clear')
             print("Draw")
             for block in self.show_game():
-              print(block,end="")
-            
+              print(block,end="")      
           break
-
         else:
           for block in self.show_game():
-            print(block,end="")
-          
+            print(block,end="")        
           os.system('clear')
         print("CPU turn")
-        
         if not self._compute_output():
           self.cpu_put()
           if self._compute_output():
@@ -252,8 +269,7 @@ class game_engine(object):
               os.system('clear')
               print("Draw")
               for block in self.show_game():
-                print(block,end="")
-              
+                print(block,end="") 
             else:            
               os.system('clear')
               self.display_result()
@@ -262,9 +278,7 @@ class game_engine(object):
             os.system('clear')
             print("\n",'\033[1;34m' + "Your turn" + '\033[0m ')
             for block in self.show_game():
-              print(block,end="")
-
-          
+              print(block,end="")    
     else:
       while(True):
         print("CPU turn")
@@ -276,7 +290,6 @@ class game_engine(object):
               print("Draw")
               for block in self.show_game():
                 print(block,end="")
-
             else:
               os.system('clear')
               self.display_result()
@@ -288,8 +301,6 @@ class game_engine(object):
             print('\n\033[1;34m' + "Your turn" + '\033[0m ')
             for block in self.show_game():
               print(block,end="")
-
-
         self._assign_value(input())
         os.system('clear')
         if (self._compute_output()):
@@ -300,7 +311,6 @@ class game_engine(object):
             print("Draw")
             for block in self.show_game():
               print(block,end="")
-
           break
         else:
           print("CPU turn")
