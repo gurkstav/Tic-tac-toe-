@@ -176,3 +176,4 @@ class Tournament(object):
 
 if  __name__ =='__main__':
     Tournament()
+# Have to merge it to MainRun
