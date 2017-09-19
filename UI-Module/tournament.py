@@ -2,14 +2,10 @@ import sys
 import os
 from backend import backend
 
-
-
-
 class Main_Tournament(object):
     """
     Main_Tournament is the class that take care of the user with initial options and also forward the user to start tournament.
-    """
-    
+    """    
     
     def __init__(self):
         
@@ -29,11 +25,10 @@ class Main_Tournament(object):
         self.back = False
         self.quit = False
         self.Main()
-
         
     def ask_action(self,prompt):
         
-       """
+        """
         Purpose is to prompt the user a question and return a 
         single lowercase letter or number as a response.
         :param prompt: The question to the user
@@ -47,8 +42,6 @@ class Main_Tournament(object):
         #os.system('cls')  # on windows
         os.system('clear')  # on linux / os x
         return answer[0]
-
-
 
     def tournament_menu(self):
         
@@ -70,16 +63,13 @@ class Main_Tournament(object):
         elif answer == "q":
             self.quit = True
         
-    
-    
     def addNewPlayer_name(self):
         
-         """
+        """
         Presents the user with a option to add his or her name and save
         it for the entire tournament. It returns the user to the tournament menu
         :return: returns nothing.
-        """
-        
+        """ 
         
         print ("Tournament - Add New Player \n\nPlease enter a new name and then press enter to confirm. \n\nPlayer Name:")
         answer = ""
@@ -88,9 +78,7 @@ class Main_Tournament(object):
             self.tournament = True
             self.addNewPlayer = True
         #os.system('cls')  # on windows
-        os.system('clear')  # on linux / os x
-        
-
+        os.system('clear')  # on linux / os x        
 
 class Tournament(object):
     
@@ -103,18 +91,13 @@ class Tournament(object):
     
     current_backend = backend()
     
-    
     def set_players(self):
-        
-        
+                
         self.addNewPlayer = 'Player1'
         self.player_list = [self.addNewPlayer]
         self.player_set = {self.addNewPlayer}
     
-    
-    
     def set_start_tournament(self):
-        
         
         answer = self.ask_action("Tournament \n\nYour Options: \n\n[A] Add New Player \n[S] Start tournament \n[B] Back \n[Q] Quit")
         self.tournament = False
@@ -122,12 +105,16 @@ class Tournament(object):
         self.start_tournament = False
         if answer == "a":
         	
-        	"""This print is just used to show current player list"""
+        	"""
+            This print is just used to show current player list
+            """
         	print current_backend.getListOfPlayerNames()
         	
         	current_backend.addNewPlayerName(input("Please enter player's name"))
             
-            """This print is just used to show player list after adding new one"""
+            """
+            This print is just used to show player list after adding new one
+            """
             print current_backend.getListOfPlayerNames()
         
             self.tournament = True
@@ -146,12 +133,7 @@ class Tournament(object):
             pass
         
         #os.system('cls')  # on windows
-        os.system('clear')  # on linux / os x
-        
-
-
-
-        
+        os.system('clear')  # on linux / os x       
     
     def Main(self):
         
@@ -160,8 +142,7 @@ class Tournament(object):
         So that the player has possibilites to add his or her name and then start the tournament or quit the session.
         :return: Returns nothing.
         """
-        
-       
+             
         while not self.quit:
             if self.tournament:
                 self.tournament_menu()
