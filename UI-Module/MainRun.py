@@ -1,5 +1,7 @@
 import sys
 import os
+from Backend import *
+from Tournament import *
 
 class MainRun(object):
     """
@@ -19,7 +21,8 @@ class MainRun(object):
         self.main_menu = True
         self.change_name = False
         self.start_game = False
-        self.quit = False
+        self.tournament = Tournament()
+        self.quit_game = False
         self.Main()
     
     def ask_action(self,prompt):
@@ -32,11 +35,9 @@ class MainRun(object):
         answer = ""
         print(prompt)
         while not answer:
-        answer = input()
+            answer = input()
 
-        #os.system('cls')  # on windows
         os.system('clear')  # on linux / os x
-        print ("\033c") #Unknown compability but should work on most bash, if windows, please test
         return answer[0]
 
     def set_main_menu(self):
@@ -53,7 +54,7 @@ class MainRun(object):
         elif answer == "s":
             self.start_game = True  
         elif answer == "q":
-            self.quit = True
+            self.quit_game = True
             
     def set_change_name(self):
         """
@@ -65,15 +66,13 @@ class MainRun(object):
         print ("Change Player Name \n\nPlease enter a new name and then press enter to confirm. \n\nNew name:")
         answer = ""
         while not answer:
-        answer = input()
+            answer = input()
         
-        #TODO: someModule.set_new_player_name(answer)
+        self.tournament.backend.setMainPlayerName(answer)
         self.main_menu = True
         self.change_name = False
-        #os.system('cls')  # on windows
-        #os.system('clear')  # on linux / os x
-        print ("\033c") #Unknown compability but should work on most bash, if windows, please test
-       
+        os.system('clear')  # on linux / os x
+               
     def set_start_game(self):
         """
         Presents the player with the menu where he or she can start a new game in various forms.
@@ -85,31 +84,28 @@ class MainRun(object):
         self.change_name = False
         self.start_game = False
         if answer == "p":
-            #TODO: player1 = somemodule.get_player_name()
+            player1 = self.Tournament.backend.getPlayerName(1)
             #TODO: gameModule.start_game(player1, "Player2")
             self.main_menu = True
             pass
         elif answer == "c":
-            #TODO: player1 = somemodule.get_player_name()
+            player1 = self.Tournament.backend.getPlayerName(1)
             #TODO: gameModule.start_game_ai(player1)
             self.main_menu = True
             pass
         elif answer == "t":
-            #TODO: player1 = somemodule.get_player_name()
-            #TODO: tournament_class.start_tournament_ui( player1 )
-            self.main_menu = True
+            self.quit_game = self.tournament.Main()
+            self.start_game = True
             pass
         elif answer == "b":
             self.main_menu = True
             pass
         elif answer == "q":
-            self.quit = True
+            self.quit_game = True
             pass
-        
-        #os.system('cls')  # on windows
-        #os.system('clear')  # on linux / os x
-        print ("\033c") #Unknown compability but should work on most bash, if windows, please test     
-    
+
+        os.system('clear')  # on linux / os x
+            
     def Main(self):
         """
         The main loop which initiates the main menu for the player. 
@@ -117,10 +113,9 @@ class MainRun(object):
         start a new game or quit the seesion.
         :return: Returns nothing.
         """
-        print ("\033c") #Unknown compability but should work on most bash, if windows, please test
         welcome_message = "Welcome to Tic-Tac-Toe. \nMenus are navigated by entering the key inside the [ ] on each alternative\n\n\n"
         print (welcome_message)
-        while not self.quit:
+        while not self.quit_game:
             if self.main_menu:
                 self.set_main_menu()
             if self.change_name:
@@ -128,9 +123,7 @@ class MainRun(object):
             if self.start_game:
                 self.set_start_game()
             pass
-        #os.system('cls')  # on windows
-        #os.system('clear')  # on linux / os x
-        print ("\033c") #Unknown compability but should work on most bash, if windows, please test
+        os.system('clear')  # on linux / os x
         print("Sad to see you go!")
 
 if  __name__ =='__main__':

@@ -1,13 +1,7 @@
 import re
-from enum import Enum
+from enum import IntEnum
 
-class winner(IntEnum):
-  undef = 0 """Game not yet played"""
-  draw = -1 """Game ended in a draw"""
-  home = 1  """Starting/first player won"""
-  away = 2  """Other/second player won"""
-
-class backend(object):
+class Backend(object):
   """
   A class to manage players' information.
   """
@@ -75,7 +69,7 @@ class backend(object):
     except:
       return "Please input the player's number in numerical form."
 
-  def getListOfPlayerNames(self)
+  def getListOfPlayerNames(self):
     return self.player_list
 
   def getNextMatch(self):
@@ -138,13 +132,13 @@ class backend(object):
       for y in range(0, len(self.player_list)):
         if self.scoreboard[y][x] == winner.home:
           score += 1
-        else if self.scoreboard[y][x] == winner.away:
+        elif self.scoreboard[y][x] == winner.away:
           score -= 1
       """ compute score for away games """
       for y in range(0, len(self.player_list)):
         if self.scoreboard[x][y] == winner.home:
           score -= 1
-        else if self.scoreboard[x][y] == winner.away:
+        elif self.scoreboard[x][y] == winner.away:
           score += 1
       if leaderboard == []:
         leaderboard.append([name, score])
@@ -196,3 +190,14 @@ class backend(object):
     except:
       current_message = "No tournament players have been set before."
     return current_message
+
+
+class winner(IntEnum):
+  undef = 0
+  """Game not yet played"""
+  draw = -1
+  """Game ended in a draw"""
+  home = 1
+  """Starting/first player won"""
+  away = 2
+  """Other/second player won"""
