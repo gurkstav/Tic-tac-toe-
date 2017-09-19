@@ -8,7 +8,9 @@ class winner(IntEnum):
   away = 2  """Other/second player won"""
 
 class backend(object):
-  """A class to manage players' information."""
+  """
+  A class to manage players' information.
+  """
 
   def __init__(self):
     """
