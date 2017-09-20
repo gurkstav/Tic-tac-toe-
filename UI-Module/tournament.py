@@ -1,5 +1,7 @@
 import sys
 import os
+import time
+
 from Backend import *
 
 class Tournament(object):
@@ -163,6 +165,13 @@ class Tournament(object):
                                  "[L] Show Leaderboard \n"+
                                  "[Q] Quit")
         if answer == "m":
+            print("The new tournament game "+
+                  str(a)+
+                  " vs. "+
+                  str(b)+
+                  " is going to start.")
+            time.sleep(10)
+            os.system('clear')  # on linux / os x
             #TODO startMatch
             pass
         elif answer == "s":
