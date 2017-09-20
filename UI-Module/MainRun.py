@@ -1,5 +1,7 @@
 import sys
 import os
+import time
+
 from Backend import *
 from Tournament import *
 
@@ -45,7 +47,11 @@ class MainRun(object):
         Purpose is to draw main menu and give the use a choice of where to procced.
         :return: returns nothing
         """
-        answer = self.ask_action("Main Menu \n\nYour options: \n\n[N] Change Player Name \n[S] Start new game \n[Q] Quit")
+        answer = self.ask_action("Main Menu \n\n"+
+                                 "Your options: \n\n"+
+                                 "[N] Change Player Name \n"+
+                                 "[S] Start new game \n"+
+                                 "[Q] Quit")
         self.main_menu = False
         self.change_name = False
         self.start_game = False
@@ -55,6 +61,8 @@ class MainRun(object):
             self.start_game = True  
         elif answer == "q":
             self.quit_game = True
+        else:
+            self.set_main_menu()
             
     def set_change_name(self):
         """
@@ -63,7 +71,9 @@ class MainRun(object):
         menu afterwards
         :return: returns nothing.
         """
-        print ("Change Player Name \n\nPlease enter a new name and then press enter to confirm. \n\nNew name:")
+        print ("Change Player Name \n\n"+
+               "Please enter a new name and then press enter to confirm. \n\n"+
+               "New name:")
         answer = ""
         while not answer:
             answer = input()
@@ -79,18 +89,28 @@ class MainRun(object):
         The player can also choose to return to the main menu or quit the game.
         :return: returns nothing.
         """
-        answer = self.ask_action("Start new game \n\nWhat type of game do you want to play? \n\n[P] Player vs. Player \n[C] Player vs. Computer \n[T] Tournament \n[B] Back \n[Q] Quit")
+        answer = self.ask_action("Start new game \n\n"+
+                                 "What type of game do you want to play? \n\n"+
+                                 "[P] Player vs. Player \n"+
+                                 "[C] Player vs. Computer \n"+
+                                 "[T] Tournament \n"+
+                                 "[B] Back \n"+
+                                 "[Q] Quit")
         self.main_menu = False
         self.change_name = False
         self.start_game = False
         if answer == "p":
             player1 = self.Tournament.backend.getPlayerName(1)
             #TODO: gameModule.start_game(player1, "Player2")
+            print ("The new game player vs. player is going to start.")
+            time.sleep(10)
             self.main_menu = True
             pass
         elif answer == "c":
             player1 = self.Tournament.backend.getPlayerName(1)
             #TODO: gameModule.start_game_ai(player1)
+            print ("The new game player vs. computer is going to start.")
+            time.sleep(10)
             self.main_menu = True
             pass
         elif answer == "t":
@@ -103,6 +123,8 @@ class MainRun(object):
         elif answer == "q":
             self.quit_game = True
             pass
+        else:
+            self.set_start_game()
 
         os.system('clear')  # on linux / os x
             
