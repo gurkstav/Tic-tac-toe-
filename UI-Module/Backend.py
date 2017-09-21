@@ -166,7 +166,6 @@ class Backend(object):
         if inserted is False:
           """ append score because it was the lowest yet """
           leaderboard.append([name, wins, draws, losses, score])
-    print("penises")
     return leaderboard
       
   """
