@@ -100,14 +100,14 @@ class MainRun(object):
         self.change_name = False
         self.start_game = False
         if answer == "p":
-            player1 = self.tournament.backend.getPlayerName(1)
+            player1 = self.Tournament.backend.getPlayerName(1)
             #TODO: gameModule.start_game(player1, "Player2")
             print ("The new game player vs. player is going to start.")
             time.sleep(10)
             self.main_menu = True
             pass
         elif answer == "c":
-            player1 = self.tournament.backend.getPlayerName(1)
+            player1 = self.Tournament.backend.getPlayerName(1)
             #TODO: gameModule.start_game_ai(player1)
             print ("The new game player vs. computer is going to start.")
             time.sleep(10)
