@@ -75,7 +75,7 @@ class backend(object):
     except:
       return "Please input the player's number in numerical form."
 
-  def getListOfPlayerNames(self)
+  def getListOfPlayerNames(self):
     return self.player_list
 
   def getNextMatch(self):
@@ -138,13 +138,13 @@ class backend(object):
       for y in range(0, len(self.player_list)):
         if self.scoreboard[y][x] == winner.home:
           score += 1
-        else if self.scoreboard[y][x] == winner.away:
+        elif self.scoreboard[y][x] == winner.away:
           score -= 1
       """ compute score for away games """
       for y in range(0, len(self.player_list)):
         if self.scoreboard[x][y] == winner.home:
           score -= 1
-        else if self.scoreboard[x][y] == winner.away:
+        elif self.scoreboard[x][y] == winner.away:
           score += 1
       if leaderboard == []:
         leaderboard.append([name, score])
