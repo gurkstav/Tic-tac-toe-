@@ -1,5 +1,7 @@
 import sys
 import os
+import time
+
 from Backend import *
 
 class Tournament(object):
@@ -131,14 +133,13 @@ class Tournament(object):
         Creates a string visualising the leaderboard.
         :return: A string containing the leaderboard.
         """
-        leaderboard = self.backend.getScoreboard()
-        player_list = self.backend.getListOfPlayerNames()
+        leaderboard = self.backend.getLeaderboard()
         result = "          |   win    draws    losses    points\n"
         count = 0
         for x in leaderboard:
             #TODO: Fix spacing for a more estetic result...
             offset = 9-len(x)
-            result += " " + str(count) +" | " + str(x[0]) + (" "*offset) + "|"
+            result += " " + str(x[0]) +" | " + str(x[1]) + (" "*offset) + "|"
             result += " " + str(x[1]) + "   "+str(x[2])+"    "+str(x[3])
             result += "\n"
             count += 1
@@ -163,6 +164,13 @@ class Tournament(object):
                                  "[L] Show Leaderboard \n"+
                                  "[Q] Quit")
         if answer == "m":
+            print("The new tournament game "+
+                  str(a)+
+                  " vs. "+
+                  str(b)+
+                  " is going to start.")
+            time.sleep(10)
+            os.system('clear')  # on linux / os x
             #TODO startMatch
             pass
         elif answer == "s":

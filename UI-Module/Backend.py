@@ -126,30 +126,47 @@ class Backend(object):
   def getLeaderboard(self):
     leaderboard = []
     for x in range(0, len(self.player_list)):
-      name = self.getPlayerName(x)
-      score = 0;
+      name = self.getPlayerName(x+1)
+      wins = 0
+      draws = 0
+      losses = 0
+      score = 0
       """ compute score for home games """ 
       for y in range(0, len(self.player_list)):
         if self.scoreboard[y][x] == winner.home:
-          score += 1
+          wins += 1
         elif self.scoreboard[y][x] == winner.away:
-          score -= 1
+          losses += 1
+        elif self.scoreboard[y][x] == winner.draw:
+          draws += 1
       """ compute score for away games """
       for y in range(0, len(self.player_list)):
         if self.scoreboard[x][y] == winner.home:
-          score -= 1
+          losses += 1
         elif self.scoreboard[x][y] == winner.away:
-          score += 1
+          wins += 1
+        elif self.scoreboard[y][x] == winner.draw:
+          draws += 1
+      winpts = 1
+      losspts = -1
+      drawpts = 0
+      score = winpts*wins+drawpts*draws+losspts*losses
       if leaderboard == []:
-        leaderboard.append([name, score])
+        leaderboard.append([name, wins, draws, losses, score])
       else:
         """ insert score at the right point on the leaderboard """
         index = 0
+        inserted = False
         while index < len(leaderboard):
-          if score > leaderboard[index][1]:
-            leaderboard.insert(index, [name, score])
+          if score > leaderboard[index][4]:
+            leaderboard.insert(index, [name, wins, draws, losses, score])
+            inserted = True
             break
           index += 1
+        if inserted is False:
+          """ append score because it was the lowest yet """
+          leaderboard.append([name, wins, draws, losses, score])
+    print("penises")
     return leaderboard
       
   """
