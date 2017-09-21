@@ -74,7 +74,7 @@ class Backend(object):
 
   def getNextMatch(self):
     if self.in_tournament is True and self.next_match_num < len(self.player_list)*(len(self.player_list)-1):
-      return self.getPlayerName(self.match_list[self.next_match_num][0]), self.getPlayerName(self.match_list[self.next_match_num][1])
+      return self.getPlayerName(self.match_list[self.next_match_num][0]+1), self.getPlayerName(self.match_list[self.next_match_num][1]+1)
     else:
       return "", ""
 
