@@ -76,29 +76,46 @@ class Tournament(object):
         """
         scoreboard  = self.backend.getScoreboard()
         player_list = self.backend.getListOfPlayerNames()
-        result = "          | "
-        
-        for x in player_list:
-            offset = 9-len(x)
-            result += x + (" "*offset) + "| "
-
-        count  = 0
-        count2 = 0
-        result += "\n"+"-"*(10*len(player_list))
+        result = "          │"
         
         for x in player_list:
             offset = 10-len(x)
-            result = result + "\n" + player_list[count] + (" "*offset) + "| "
-            for x in player_list:
+            result += " " + x + (" "*offset) + "│"
+
+        count  = 0
+        count2 = 0
+        result += "\n" + "─"*10
+
+        for x in player_list:
+            result += "┼"
+            if x != player_list[-1]:
+                result += "─"*11
+            else:
+                result += "─"*11 + "┤"
+        for x in player_list:
+            offset = 10-len(x)
+            result = result + "\n" + player_list[count] + (" "*offset) + "│"
+            for x2 in player_list:
                 if count2 == count:
-                    result += "     x    |"
+                    result += "     x     "
                 elif scoreboard[count][0] == winner.undef:
-                    result += "          |"
+                    result += "           "
                 elif count2 < count:
-                    result += str(scoreboard[count][1]) + " |"                    
+                    if scoreboard[count][1] == winner.draw:
+                        result +="    Draw   "
+                    elif scoreboard[count][1] == winner.home:
+                        result +=" " + x + (" "*(10-len(x)))
+                    else:
+                        result +=" " + x2 + (" "*(10-len(x2)))
                 else:
-                    result += str(scoreboard[count][0]) + " |"                    
+                    if scoreboard[count][1] == winner.draw:
+                        result +="    Draw   "
+                    elif scoreboard[count][0] == winner.home:
+                        result +=" " + x + (" "*(10-len(x)))
+                    else:
+                        result  +=" " + x2 + (" "*(10-len(x2)))
                 count2 += 1
+                result += "│"
             count  = count+1
             count2 = 0
             
@@ -117,8 +134,8 @@ class Tournament(object):
                                  "[B] Back to next match\n"+
                                  "[Q] Quit\n")
         if answer == "s":
-            self.show_scoreboard = False
-            self.show_leaderboard = True
+            self.show_scoreboard = True
+            self.show_leaderboard = False
         elif answer == "b":
             self.start_tournament = True
         elif answer == "q":
@@ -134,13 +151,16 @@ class Tournament(object):
         :return: A string containing the leaderboard.
         """
         leaderboard = self.backend.getLeaderboard()
-        result = "          |   win    draws    losses    points\n"
+        result = "  │           │   win    draws    losses    points\n"
         count = 0
         for x in leaderboard:
-            #TODO: Fix spacing for a more aesthetically pleasing result...
-            offset = 9-len(x)
-            result += " " + str(x[0]) +" | " + str(x[1]) + (" "*offset) + "|"
-            result += " " + str(x[1]) + "   "+str(x[2])+"    "+str(x[3])
+            offset = 10-len(x[0])
+            result += str(count+1) + " │"
+            result += " " + x[0] + (" "*offset) + "│"
+            result += "    " + str(x[1])
+            result += "       " + str(x[2])
+            result += "        " + str(x[3])
+            result += "         " + str(x[4])
             result += "\n"
             count += 1
         return (result)
@@ -175,7 +195,7 @@ class Tournament(object):
             pass
         elif answer == "s":
             self.start_tournament = False
-            self.show_scoreboard = True
+            self.show_scoreboard  = True
         elif answer == "l":
             self.start_tournament = False
             self.show_leaderboard = True
@@ -246,7 +266,13 @@ class Tournament(object):
             answer = input()
             self.tournament = True
             self.addNewPlayer = False
-        self.backend.addNewPlayerName(answer)
+
+        succes, msg = self.backend.addNewPlayerName(answer)
+        if not succes:
+            os.system('clear')  # on linux / os x 
+            print (msg)
+            self.addNewPlayer_name()
+            
         os.system('clear')  # on linux / os x        
         
     

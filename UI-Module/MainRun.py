@@ -77,8 +77,13 @@ class MainRun(object):
         answer = ""
         while not answer:
             answer = input()
-        
-        self.tournament.backend.setMainPlayerName(answer)
+            
+        succes, msg = self.tournament.backend.setMainPlayerName(answer)
+        if not succes:
+            os.system('clear')  # on linux / os x 
+            print (msg)
+            self.set_change_name()
+            
         self.main_menu = True
         self.change_name = False
         os.system('clear')  # on linux / os x
