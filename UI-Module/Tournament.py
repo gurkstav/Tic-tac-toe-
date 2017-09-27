@@ -137,7 +137,7 @@ class Tournament(object):
         result = "          |   win    draws    losses    points\n"
         count = 0
         for x in leaderboard:
-            #TODO: Fix spacing for a more estetic result...
+            #TODO: Fix spacing for a more aesthetically pleasing result...
             offset = 9-len(x)
             result += " " + str(x[0]) +" | " + str(x[1]) + (" "*offset) + "|"
             result += " " + str(x[1]) + "   "+str(x[2])+"    "+str(x[3])
