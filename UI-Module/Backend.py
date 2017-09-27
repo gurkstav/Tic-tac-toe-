@@ -8,8 +8,8 @@ class Backend(object):
 
   def __init__(self):
     """
-    Name of main player is written in a specific function, basically the same 
-    as setNewPlayerName.
+    Name of main player is written in a specific function (setMainPlayerName), basically the same 
+    as addNewPlayerName.
     Name of main player is set as 'Player1' by default.
     player_list is used to return player's name according to index (set are not indexed).    
     """
@@ -81,7 +81,9 @@ class Backend(object):
   def setMatchResult(self, winner):
     self.scoreboard[self.match_list[self.next_match_num][1], self.match_list[self.next_match_num][0]] = winner
     return True
-    
+
+  """startTournament generates the necessary data structures (scoreboard, match_list, next_match_num) in memory and sets the in_tournament flag to indicate that the tournament is currently in progress.
+     Returns a tuple boolean, string where the boolean is True on success, False otherwise and the string shall in such cases contain a descriptive error message."""
   def startTournament(self):
     if self.in_tournament is False:
       if len(self.player_list) < 2:
@@ -107,6 +109,8 @@ class Backend(object):
     else:
       return False, "The tournament has already been started!"
 
+  """endTournament clears the necessary memory structures (scoreboard, match_list, next_match_num and unsets the in_tournament flag to indicate that the tournament is no longer in progress.
+     Returns boolean, string where the boolean is True on success, False otherwise and the string shall in such cases contain a descriptive error message."""
   def endTournament(self):
     if self.in_tournament is False:
       return False, "No tournament to end!"
