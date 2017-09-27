@@ -79,6 +79,7 @@ class Backend(object):
       return self.getPlayerName(self.match_list[self.next_match_num][0]+1), self.getPlayerName(self.match_list[self.next_match_num][1]+1)
     else:
       return "", ""
+    
   """setMatchResult sets the reult in the scoreboard for the current match and increments the internal counter which keeps track of which match the tournament is on.
      Takes in an IntEnum winner, returns True upon success and False otherwise."""
   def setMatchResult(self, winner):
