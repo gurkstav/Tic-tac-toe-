@@ -90,19 +90,25 @@ class Backend(object):
         return False, "Cannot start a tournament with less than 2 players!"
       else:
         self.in_tournament = True
-        """ Set up the empty table (full of 'winner.undef' because no matches have been played yet) """
+        """ 
+        Set up the empty table (full of 'winner.undef' because no matches have been played yet)
+        """
         for x in range(0, len(self.player_list)):
           self.scoreboard.append([])
           for y in range(0, len(self.player_list)):
             self.scoreboard[x].append(winner.undef)
-        """ Generate the first half of the match list """
+        """ 
+        Generate the first half of the match list
+        """
         for x in range(1, len(self.player_list)):
           for y in range(0, len(self.player_list)):
             player2num = y+x
             while player2num >= len(self.player_list):
               player2num -= len(self.player_list)
             self.match_list.append([y, player2num])
-        """ Generate the second half of the match list by mirroring the first """
+        """ 
+        Generate the second half of the match list by mirroring the first 
+        """
         for x in range(0, len(self.player_list)*(len(self.player_list)-1)-1):
           self.match_list.append([self.match_list[x][1], self.match_list[x][0]]) 
         return True, self._name_process(self.main_player)
@@ -135,7 +141,9 @@ class Backend(object):
       draws = 0
       losses = 0
       score = 0
-      """ compute score for home games """ 
+      """ 
+      compute score for home games 
+      """ 
       for y in range(0, len(self.player_list)):
         if self.scoreboard[y][x] == winner.home:
           wins += 1
@@ -143,7 +151,9 @@ class Backend(object):
           losses += 1
         elif self.scoreboard[y][x] == winner.draw:
           draws += 1
-      """ compute score for away games """
+      """ 
+      compute score for away games 
+      """
       for y in range(0, len(self.player_list)):
         if self.scoreboard[x][y] == winner.home:
           losses += 1
@@ -158,7 +168,9 @@ class Backend(object):
       if leaderboard == []:
         leaderboard.append([name, wins, draws, losses, score])
       else:
-        """ insert score at the right point on the leaderboard """
+        """
+        insert score at the right point on the leaderboard 
+        """
         index = 0
         inserted = False
         while index < len(leaderboard):
@@ -168,9 +180,10 @@ class Backend(object):
             break
           index += 1
         if inserted is False:
-          """ append score because it was the lowest yet """
+          """ 
+          append score because it was the lowest yet 
+          """
           leaderboard.append([name, wins, draws, losses, score])
-    print("penises")
     return leaderboard
       
   """
@@ -215,10 +228,18 @@ class Backend(object):
 
 class winner(IntEnum):
   undef = 0
-  """Game not yet played"""
+  """
+  Game not yet played
+  """
   draw = -1
-  """Game ended in a draw"""
+  """
+  Game ended in a draw
+  """
   home = 1
-  """Starting/first player won"""
+  """
+  Starting/first player won
+  """
   away = 2
-  """Other/second player won"""
+  """
+  Other/second player won
+  """
