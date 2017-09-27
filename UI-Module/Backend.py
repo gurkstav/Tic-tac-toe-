@@ -72,15 +72,22 @@ class Backend(object):
   def getListOfPlayerNames(self):
     return self.player_list
 
+  """getNextMatch gets the players participating in the upcoming match from the match list.
+     Returns the names of the players participating in the upcoming match according to the match list if the tournament is currently in progress, returns two empty strings otherwise."""
   def getNextMatch(self):
     if self.in_tournament is True and self.next_match_num < len(self.player_list)*(len(self.player_list)-1):
       return self.getPlayerName(self.match_list[self.next_match_num][0]+1), self.getPlayerName(self.match_list[self.next_match_num][1]+1)
     else:
       return "", ""
-
+  """setMatchResult sets the reult in the scoreboard for the current match and increments the internal counter which keeps track of which match the tournament is on.
+     Takes in an IntEnum winner, returns True upon success and False otherwise."""
   def setMatchResult(self, winner):
-    self.scoreboard[self.match_list[self.next_match_num][1], self.match_list[self.next_match_num][0]] = winner
-    return True
+    if self.in_tournament is True and self.next_match_num < len(self.player_list)*(len(self.player_list)-1):
+      self.scoreboard[self.match_list[self.next_match_num][1], self.match_list[self.next_match_num][0]] = winner
+      next_match_num += 1
+      return True
+    else:
+      return False
 
   """startTournament generates the necessary data structures (scoreboard, match_list, next_match_num) in memory and sets the in_tournament flag to indicate that the tournament is currently in progress.
      Returns a tuple boolean, string where the boolean is True on success, False otherwise and the string shall in such cases contain a descriptive error message."""
@@ -135,7 +142,7 @@ class Backend(object):
     else:
       return self.scoreboard
 
-  """getLeaferboard returns the leaderboard if the tournament is in progress. The leaderboard is a list of lists of the form playername, wins, draws, losses, score.
+  """getLeaferboard returns the leaderboard if the tournament is in progress. The leaderboard is a list of lists of the form playername, wins, draws, losses, score. The leaderboard is ordered according to 
      If the tournament is in progress, the leaderboard is returned. Else boolean, string is returned where the boolean is False and the string is a suitable error message."""
   def getLeaderboard(self):
     if self.in_tournament is False:
