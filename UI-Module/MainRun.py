@@ -87,6 +87,22 @@ class MainRun(object):
         self.main_menu = True
         self.change_name = False
         os.system('clear')  # on linux / os x
+
+    def set_difficulty(self):
+        """
+        Used to prompt player what difficulty he or she wants.
+        :return: returns the difficulty in the range from 1-3. If back return value is False.
+        """
+        answer = self.ask_action("Choose difficulty against Computer Player\n"+
+                                 "[1] Easy\n"+
+                                 "[2] Medium\n"+
+                                 "[3] Hard\n"+
+                                 "[B] Back \n")
+        if answer == "b":
+            return False
+        elif answer not in ("1","2","3"):
+            self.set_difficulty()
+        return int(answer)
                
     def set_start_game(self):
         """
@@ -103,33 +119,33 @@ class MainRun(object):
                                  "[Q] Quit")
         self.main_menu = False
         self.change_name = False
-        self.start_game = False
+
         if answer == "p":
             player1 = self.tournament.backend.getPlayerName(1)
-            #TODO: gameModule.start_game(player1, "Player2")
             print ("The new game player vs. player is going to start.")
             time.sleep(10)
-            self.main_menu = True
-            pass
+            #TODO: gameModule.start_game(player1, "Player2")
+  
         elif answer == "c":
             player1 = self.tournament.backend.getPlayerName(1)
-            #TODO: gameModule.start_game_ai(player1)
-            print ("The new game player vs. computer is going to start.")
-            time.sleep(10)
-            self.main_menu = True
-            pass
+            difficulty = self.set_difficulty()
+            tier = ["undef","Easy","Medium","Hard"]
+            if difficulty:
+                print ("The new game player vs. computer ("+
+                       tier[difficulty]+
+                       ") is going to start.")
+                time.sleep(10)
+                #TODO: gameModule.start_game_ai(player1,difficulty)
+
         elif answer == "t":
             self.quit_game = self.tournament.Main()
-            self.start_game = True
-            pass
+         
         elif answer == "b":
+            self.start_game = False
             self.main_menu = True
-            pass
+       
         elif answer == "q":
             self.quit_game = True
-            pass
-        else:
-            self.set_start_game()
 
         os.system('clear')  # on linux / os x
             

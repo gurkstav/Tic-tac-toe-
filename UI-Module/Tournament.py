@@ -192,6 +192,8 @@ class Tournament(object):
             time.sleep(10)
             os.system('clear')  # on linux / os x
             #TODO startMatch
+            #TODO setMatchResult(enum.winner)
+            
             pass
         elif answer == "s":
             self.start_tournament = False
