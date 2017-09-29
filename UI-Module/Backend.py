@@ -1,5 +1,6 @@
 import re
 from enum import IntEnum
+from random import choice
 
 class Backend(object):
   """
@@ -20,6 +21,9 @@ class Backend(object):
     self.scoreboard = []
     self.match_list = []
     self.next_match_num = 0
+    self.tiebreakpts = []
+    self.winners = []
+    self.winnername = ""
     
   def _name_process(self, name):
     """
@@ -75,8 +79,17 @@ class Backend(object):
   """getNextMatch gets the players participating in the upcoming match from the match list.
      Returns the names of the players participating in the upcoming match according to the match list if the tournament is currently in progress, returns two empty strings otherwise."""
   def getNextMatch(self):
-    if self.in_tournament is True and self.next_match_num < len(self.player_list)*(len(self.player_list)-1):
-      return self.getPlayerName(self.match_list[self.next_match_num][0]+1), self.getPlayerName(self.match_list[self.next_match_num][1]+1)
+    if self.in_tournament is True:
+      if self.next_match_num < len(self.player_list)*(len(self.player_list)-1):
+        return self.getPlayerName(self.match_list[self.next_match_num][0]+1), self.getPlayerName(self.match_list[self.next_match_num][1]+1)
+      else:
+        self.calculateWinners()
+        if len(self.winners) == 1:
+          self.winner = self.winners[0]
+          return "", ""
+        else:
+          self.resolveDraw()
+          return self.getNextMatch()
     else:
       return "", ""
     
@@ -84,7 +97,13 @@ class Backend(object):
      Takes in an IntEnum winner, returns True upon success and False otherwise."""
   def setMatchResult(self, winner):
     if self.in_tournament is True and self.next_match_num < len(self.player_list)*(len(self.player_list)-1):
-      self.scoreboard[self.match_list[self.next_match_num][1], self.match_list[self.next_match_num][0]] = winner
+      if len(self.match_list) <= len(self.player_list):
+        if winner == winner.home:
+          self.tiebreakpts[self.next_match_num[0]] += 1
+        elif winner == winner.away:
+          self.tiebreakpts[self.next_match_num[1]] += 1          
+      else:
+        self.scoreboard[self.match_list[self.next_match_num][1], self.match_list[self.next_match_num][0]] = winner
       next_match_num += 1
       return True
     else:
@@ -103,6 +122,7 @@ class Backend(object):
         """
         for x in range(0, len(self.player_list)):
           self.scoreboard.append([])
+          self.tiebreakpts.append([0])
           for y in range(0, len(self.player_list)):
             self.scoreboard[x].append(winner.undef)
         """ 
@@ -182,7 +202,7 @@ class Backend(object):
         winpts = 1
         losspts = -1
         drawpts = 0
-        score = winpts*wins+drawpts*draws+losspts*losses
+        score = winpts*wins+drawpts*draws+losspts*losses+tiebreakpts[x]
         if leaderboard == []:
           leaderboard.append([name, wins, draws, losses, score])
         else:
@@ -204,18 +224,41 @@ class Backend(object):
             leaderboard.append([name, wins, draws, losses, score])
     return leaderboard
 
-  def getWinners(self):
+  def calculateWinners(self):
     leaderboard = self.getLeaderboard(self)
     if leaderboard[0][4] != leaderboard[1][4]:
-      return [leaderboard[0][0]]
+      self.winners = [leaderboard[0][0]]
     else:
-      winners = []
       for x in range(0, len(self.player_list)):
         if leaderboard[x][4] != leaderboard[0][4]:
           break
         else:
-          winners.append(leaderboard[x][0])
-      return winners
+          self.winners.append(leaderboard[x][0])
+
+  def resolveDraw(self):
+    if len(self.winners) == 2 and len(self.match_list) != 2:
+      player1num = -1
+      player2num = -1
+      for x in range(0, len(self.player_list)):
+        if self.player_list[x] == winners[0]:
+          player1num = x
+          break
+      for x in range(0, len(self.player_list)):
+        if self.player_list[x] == winners[1]:
+          player2num = x
+          break
+      if player1num > player2num:
+        self.issueDoubleRematch(player1num, player2num)
+      else:
+        self.issueDoubleRematch(player2num, player1num)
+    else:
+      self.winner = random.choice(winners)
+
+  def issueDoubleRematch(self, player1num, player2num):
+    self.matchlist = []
+    self.match_list.append([player2num, player1num])
+    self.match_list.append([player1num, player2num])
+    self.next_match_num = 0
   """
   This part is desined to make sure the program will not been crashed by some situation.
   Also, some functions are provided if we want to use.
