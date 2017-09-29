@@ -203,7 +203,19 @@ class Backend(object):
             """
             leaderboard.append([name, wins, draws, losses, score])
     return leaderboard
-      
+
+  def getWinners(self):
+    leaderboard = self.getLeaderboard(self)
+    if leaderboard[0][4] != leaderboard[1][4]:
+      return [leaderboard[0][0]]
+    else:
+      winners = []
+      for x in range(0, len(self.player_list)):
+        if leaderboard[x][4] != leaderboard[0][4]:
+          break
+        else:
+          winners.append(leaderboard[x][0])
+      return winners
   """
   This part is desined to make sure the program will not been crashed by some situation.
   Also, some functions are provided if we want to use.
