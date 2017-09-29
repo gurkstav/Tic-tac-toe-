@@ -43,7 +43,7 @@ class Tournament(object):
         while not answer:
             answer = input()
         os.system('clear')  # on linux / os x
-        return answer[0]
+        return answer[0].lower()
 
 
     def draw_scoreboard(self):

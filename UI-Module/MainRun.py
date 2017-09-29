@@ -40,7 +40,7 @@ class MainRun(object):
             answer = input()
 
         os.system('clear')  # on linux / os x
-        return answer[0]
+        return answer[0].lower()
 
     def set_main_menu(self):
         """
