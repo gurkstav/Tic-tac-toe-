@@ -27,23 +27,35 @@ class Tournament(object):
         self.addNewPlayer = False
         self.start_tournament = False
         self.back = False
+        self.end_tournament = False
         self.quit_game = False
         self.backend = Backend()
 
         
-    def ask_action(self,prompt):
+    def ask_action(self,prompt, alts):
         """
         Purpose is to prompt the user a question and return a 
         single lowercase letter or number as a response.
         :param prompt: The question to the user
         :return: The first letter of the response
         """
-        answer = ""
-        print(prompt)
-        while not answer:
-            answer = input()
         os.system('clear')  # on linux / os x
-        return answer[0].lower()
+        print(prompt)
+        answer = input()
+        errorMSG = "Invalid input, acceptable: " + ", ".join(alts) + "\n" + prompt
+        while True:
+            while not answer:
+                os.system('clear')  # on linux / os x
+                print (errorMSG)
+                answer = input()
+    
+            if answer[0].upper() not in alts:
+                os.system('clear')  # on linux / os x
+                print (errorMSG)
+                answer = input()
+            else:
+                os.system('clear')  # on linux / os x
+                return answer[0].lower()
 
 
     def draw_scoreboard(self):
@@ -56,7 +68,7 @@ class Tournament(object):
                                  "\n\n"+
                                  "[L] Show Leaderboard\n"+
                                  "[B] Back to next match\n"+
-                                 "[Q] Quit\n")
+                                 "[Q] Quit\n",["L","B","Q"])
         if answer == "l":
             self.show_scoreboard = False
             self.show_leaderboard = True
@@ -132,7 +144,7 @@ class Tournament(object):
                                  "\n\n"+
                                  "[S] Show Scoreboard\n"+
                                  "[B] Back to next match\n"+
-                                 "[Q] Quit\n")
+                                 "[Q] Quit\n",["S","B","Q"])
         if answer == "s":
             self.show_scoreboard = True
             self.show_leaderboard = False
@@ -174,15 +186,22 @@ class Tournament(object):
         """
         self.backend.startTournament()
         a,b = self.backend.getNextMatch()
-        answer = self.ask_action("Tournament - Next Match \n\nNext Match will be "+
-                                 str(a)+
-                                 " vs. "+
-                                 str(b)+
-                                 "\n\n"+
-                                 "[M] Start match \n"+
+        ended = not a and not b
+        if ended:
+            winner = self.backend.getWinner()
+            question += "All Games in this tournament have been played. Winner is " + winner + "\n\n"
+            question += "\n\nCongratulations! \n\n[B] Back to Main Menu \n"
+            alts = ["B","S","L","Q"]
+        else:
+            question += "Tournament - Next Match \n\nNext Match will be "
+            question += str(a) + " vs. " + str(b) + "\n\n[M] Start match \n"
+            alts = ["M","S","L","Q"]
+
+        answer = self.ask_action(question +
                                  "[S] Show Scoreboard \n"+
                                  "[L] Show Leaderboard \n"+
-                                 "[Q] Quit")
+                                 "[Q] Quit",alts)
+        
         if answer == "m":
             print("The new tournament game "+
                   str(a)+
@@ -195,6 +214,11 @@ class Tournament(object):
             #TODO setMatchResult(enum.winner)
             
             pass
+        elif answer == "b":
+            self.end_tournament = True
+            self.start_tournament = False
+            self.back = True
+            pass
         elif answer == "s":
             self.start_tournament = False
             self.show_scoreboard  = True
@@ -203,9 +227,6 @@ class Tournament(object):
             self.show_leaderboard = True
         elif answer == "q":
             self.quit_game = True
-        else:
-            self.start_tournament.show()
-
         
     def tournament_menu(self):
         """
@@ -215,32 +236,24 @@ class Tournament(object):
         """
         can_start = (len(self.backend.getListOfPlayerNames()) > 1)
         no_player = len(self.backend.getListOfPlayerNames())
-        no_games = "x" #TODO forgot if rematch was a thing
-        print ("Tournament \n\n"+
-               "Your options: \n\n"+
-               "[A] Add New Player")
+        no_games = no_player * no_player
+        question = "Tournament \n\nYour options: \n\n[A] Add New Player\n"
         if can_start:
-               print ("[S] Start Tournament ("+
-                      str(no_player)+
-                      " players → "+
-                      str(no_games)+
-                      " games)")
-               
-        print ("[B] Back \n"+
-               "[Q] Quit \n\n"+
-               "Players in tournament so far:\n")
-        print(*self.backend.getListOfPlayerNames(), sep='\n')
-        
+            question += "[S] Start Tournament ("+str(no_player)+" players → "+str(no_games)+" games)\n"              
+        question += "[B] Back \n[Q] Quit \n\nPlayers in tournament so far:\n"
+        question += "\n".join(self.backend.getListOfPlayerNames()) + "\n"
 
-        
-        answer = self.ask_action("")
+        if can_start:
+            answer = self.ask_action(question,["A","S","B","Q"])
+        else:
+            answer = self.ask_action(question,["A","B","Q"])
         self.tournament = False
         self.addNewPlayer = False
         
         if answer == "a":
             self.addNewPlayer = True
 
-        elif answer == "s" and can_start:
+        elif answer == "s":
             self.start_tournament = True
             pass
             
@@ -249,10 +262,7 @@ class Tournament(object):
           
         elif answer == "q":
             self.quit_game = True
-        else:
-            self.tournament_menu()
         
-
         
     def addNewPlayer_name(self):
         """
@@ -303,6 +313,8 @@ class Tournament(object):
                 self.draw_leaderboard()
                 
             elif self.back:
+                if self.end_tournament:
+                    self.backend.endTournament()
                 self.tournament = True
                 self.back = False
                 return False

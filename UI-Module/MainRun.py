@@ -26,32 +26,17 @@ class MainRun(object):
         self.tournament = Tournament()
         self.quit_game = False
         self.Main()
-    
-    def ask_action(self,prompt):
-        """
-        Purpose is to prompt the user a question and return a 
-        single lowercase letter or number as a response.
-        :param prompt: The question to the user
-        :return: The first letter of the response
-        """
-        answer = ""
-        print(prompt)
-        while not answer:
-            answer = input()
-
-        os.system('clear')  # on linux / os x
-        return answer[0].lower()
 
     def set_main_menu(self):
         """
         Purpose is to draw main menu and give the use a choice of where to procced.
         :return: returns nothing
         """
-        answer = self.ask_action("Main Menu \n\n"+
+        answer = self.tournament.ask_action("Main Menu \n\n"+
                                  "Your options: \n\n"+
                                  "[N] Change Player Name \n"+
                                  "[S] Start new game \n"+
-                                 "[Q] Quit")
+                                 "[Q] Quit",["N","S","Q"])
         self.main_menu = False
         self.change_name = False
         self.start_game = False
@@ -61,8 +46,6 @@ class MainRun(object):
             self.start_game = True  
         elif answer == "q":
             self.quit_game = True
-        else:
-            self.set_main_menu()
             
     def set_change_name(self):
         """
@@ -93,11 +76,11 @@ class MainRun(object):
         Used to prompt player what difficulty he or she wants.
         :return: returns the difficulty in the range from 1-3. If back return value is False.
         """
-        answer = self.ask_action("Choose difficulty against Computer Player\n"+
+        answer = self.tournament.ask_action("Choose difficulty against Computer Player\n"+
                                  "[1] Easy\n"+
                                  "[2] Medium\n"+
                                  "[3] Hard\n"+
-                                 "[B] Back \n")
+                                 "[B] Back \n",["1","2","3","B"])
         if answer == "b":
             return False
         elif answer not in ("1","2","3"):
@@ -110,13 +93,13 @@ class MainRun(object):
         The player can also choose to return to the main menu or quit the game.
         :return: returns nothing.
         """
-        answer = self.ask_action("Start new game \n\n"+
+        answer = self.tournament.ask_action("Start new game \n\n"+
                                  "What type of game do you want to play? \n\n"+
                                  "[P] Player vs. Player \n"+
                                  "[C] Player vs. Computer \n"+
                                  "[T] Tournament \n"+
                                  "[B] Back \n"+
-                                 "[Q] Quit")
+                                 "[Q] Quit",["P","C","T","B","Q"])
         self.main_menu = False
         self.change_name = False
 
