@@ -189,11 +189,11 @@ class Tournament(object):
         ended = not a and not b
         if ended:
             winner = self.backend.getWinner()
-            question += "All Games in this tournament have been played. Winner is " + winner + "\n\n"
+            question = "All Games in this tournament have been played. Winner is " + winner + "\n\n"
             question += "\n\nCongratulations! \n\n[B] Back to Main Menu \n"
             alts = ["B","S","L","Q"]
         else:
-            question += "Tournament - Next Match \n\nNext Match will be "
+            question = "Tournament - Next Match \n\nNext Match will be "
             question += str(a) + " vs. " + str(b) + "\n\n[M] Start match \n"
             alts = ["M","S","L","Q"]
 
