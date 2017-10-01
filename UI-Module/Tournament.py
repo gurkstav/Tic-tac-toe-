@@ -210,8 +210,10 @@ class Tournament(object):
                   " is going to start.")
             time.sleep(10)
             os.system('clear')  # on linux / os x
-            #TODO startMatch
-            #TODO setMatchResult(enum.winner)
+            players = backend.getListOfPlayerNames()
+            #TODO winner = gameModule.start_game_ai(players,difficulty)
+            #TODO IF home or away (a or b)
+            #TODO backend.setMatchResult(enum.winner)
             
             pass
         elif answer == "b":

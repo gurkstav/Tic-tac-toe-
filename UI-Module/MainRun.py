@@ -107,7 +107,8 @@ class MainRun(object):
             player1 = self.tournament.backend.getPlayerName(1)
             print ("The new game player vs. player is going to start.")
             time.sleep(10)
-            #TODO: gameModule.start_game(player1, "Player2")
+            #TODO: For F?
+            #TODO: gameModule.start_game([player1, "Player2"],0)
   
         elif answer == "c":
             player1 = self.tournament.backend.getPlayerName(1)
@@ -118,7 +119,7 @@ class MainRun(object):
                        tier[difficulty]+
                        ") is going to start.")
                 time.sleep(10)
-                #TODO: gameModule.start_game_ai(player1,difficulty)
+                #TODO: gameModule.start_game_ai([player1],difficulty)
 
         elif answer == "t":
             self.quit_game = self.tournament.Main()
