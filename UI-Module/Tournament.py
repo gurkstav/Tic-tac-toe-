@@ -28,6 +28,7 @@ class Tournament(object):
         self.start_tournament = False
         self.back = False
         self.end_tournament = False
+        self.tournamnet_diff = 0
         self.quit_game = False
         self.backend = Backend()
 
@@ -214,7 +215,8 @@ class Tournament(object):
             time.sleep(10)
             os.system('clear')  # on linux / os x
             players = self.backend.getListOfPlayerNames()
-            #TODO winner = self.gameModule.start_game_ai(players,difficulty)
+            #TODO if AI, pass along AI diff to GP
+            #TODO winner = self.gameModule.start_game(players,difficulty)
             #TODO IF home or away (a or b)
             #TODO self.backend.setMatchResult(enum.winner)
             
@@ -232,7 +234,29 @@ class Tournament(object):
             self.show_leaderboard = True
         elif answer == "q":
             self.quit_game = True
-        
+
+    def set_difficulty(self,tournament,no_player):
+        """
+        Used to prompt player what difficulty he or she wants.
+        :param tournament: A bool indicating if this is tournamnet difficulty
+        :param no_player: int indicating how many players the difficulty adresses.
+        :return: returns the difficulty in the range from 1-3. If back return value is False.
+        """
+        if tournament:
+            question = "You have started a tournament with "
+            question += str(no_player) + " human players and "
+            question += str(8-no_player) + " AI players. Please select the maximum difficulty for the AI players. The difficulty of the AI players will be randomly assigned, but with an upper limit of your choice. \n\nMaximum AI difficulty:\n"
+        else:
+            question =  "Choose difficulty against Computer Player \n"
+        question += "\n[1] Easy \n[2] Medium \n[3] Hard \n[B] Back"
+        question += "\n\nPlease type a command and press enter:"
+        answer = self.ask_action(question,["1","2","3","B"])
+        if answer == "b":
+            return False
+        elif answer not in ("1","2","3"):
+            self.set_difficulty()
+        return int(answer)
+            
     def tournament_menu(self):
         """
         Draw the main tournament menu and then give a choice of where to procced.
@@ -241,10 +265,19 @@ class Tournament(object):
         """
         can_start = (len(self.backend.getListOfPlayerNames()) > 1)
         no_player = len(self.backend.getListOfPlayerNames())
-        no_games = no_player * no_player
+        """
+        removed because tournamnet is to be filled with AI. 
+        If not this calculates the number of games. 
+        exldued code in "if can start" belongs to this issue
+        """
+        #no_games = no_player * no_player
         question = "Tournament \n\nYour options: \n\n[A] Add New Player\n"
         if can_start:
-            question += "[S] Start Tournament ("+str(no_player)+" players → "+str(no_games)+" games)\n"              
+            # question += "[S] Start Tournament ("+str(no_player)
+            # question += " players → "+str(no_games)+" games)\n"
+            question += "[S] Start Tournament ("+str(no_player)
+            question += " players → will be filled up with "+str(8-no_player)+" AI players)\n"
+
         question += "[B] Back \n[Q] Quit \n\nPlayers in tournament so far:\n"
         question += "\n".join(self.backend.getListOfPlayerNames()) + "\n"
         question += "\nPlease type a command and press enter:"
@@ -252,6 +285,7 @@ class Tournament(object):
             answer = self.ask_action(question,["A","S","B","Q"])
         else:
             answer = self.ask_action(question,["A","B","Q"])
+
         self.tournament = False
         self.addNewPlayer = False
         
@@ -259,8 +293,17 @@ class Tournament(object):
             self.addNewPlayer = True
 
         elif answer == "s":
-            self.start_tournament = True
-            pass
+            if no_player < 8 and not self.tournamnet_diff:
+                """
+                If ai is included a difficulty is needed for the opponents. 
+                Main player chooses difficulty.
+                """
+                self.tournamnet_diff = self.set_difficulty(True,no_player)
+            if self.tournamnet_diff:
+                self.start_tournament = True
+            else:
+                self.tournament = True
+
             
         elif answer == "b":
             self.back = True

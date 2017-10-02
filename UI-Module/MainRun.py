@@ -71,23 +71,6 @@ class MainRun(object):
         self.main_menu = True
         self.change_name = False
         os.system('clear')  # on linux / os x
-
-    def set_difficulty(self):
-        """
-        Used to prompt player what difficulty he or she wants.
-        :return: returns the difficulty in the range from 1-3. If back return value is False.
-        """
-        answer = self.tournament.ask_action("Choose difficulty against Computer Player\n"+
-                                 "[1] Easy\n"+
-                                 "[2] Medium\n"+
-                                 "[3] Hard\n"+
-                                 "[B] Back \n\n"+
-                                "Please type a command and press enter:",["1","2","3","B"])
-        if answer == "b":
-            return False
-        elif answer not in ("1","2","3"):
-            self.set_difficulty()
-        return int(answer)
                
     def set_start_game(self):
         """
@@ -115,7 +98,7 @@ class MainRun(object):
   
         elif answer == "c":
             player1 = self.tournament.backend.getPlayerName(1)
-            difficulty = self.set_difficulty()
+            difficulty = self.tournament.set_difficulty(False,1)
             tier = ["undef","Easy","Medium","Hard"]
             if difficulty:
                 print ("The new game player vs. computer ("+
