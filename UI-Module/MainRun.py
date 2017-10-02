@@ -88,16 +88,14 @@ class MainRun(object):
                                 "Please type a command and press enter:",["P","C","T","B","Q"])
         self.main_menu = False
         self.change_name = False
-
+        player1 = self.tournament.backend.getPlayerName(1)
         if answer == "p":
-            player1 = self.tournament.backend.getPlayerName(1)
-            print ("The new game player vs. player is going to start.")
+
+            print ("The new game "+player1+" vs. Player2 is going to start.")
             time.sleep(10)
-            #TODO: For F?
             #TODO: gameModule.start_game([player1, "Player2"],0)
   
         elif answer == "c":
-            player1 = self.tournament.backend.getPlayerName(1)
             difficulty = self.tournament.set_difficulty(False,1)
             tier = ["undef","Easy","Medium","Hard"]
             if difficulty:
