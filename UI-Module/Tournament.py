@@ -44,7 +44,7 @@ class Tournament(object):
                 print (errorMSG)
                 answer = input()
     
-            if answer[0].upper() not in alts:
+            if answer[0].upper() not in alts or len(answer) > 1:
                 os.system('clear')  # on linux / os x
                 print (errorMSG)
                 answer = input()
