@@ -36,7 +36,8 @@ class MainRun(object):
                                  "Your options: \n\n"+
                                  "[N] Change Player Name \n"+
                                  "[S] Start new game \n"+
-                                 "[Q] Quit",["N","S","Q"])
+                                 "[Q] Quit \n\n"+
+                                "Please type a command and press enter:",["N","S","Q"])
         self.main_menu = False
         self.change_name = False
         self.start_game = False
@@ -80,7 +81,8 @@ class MainRun(object):
                                  "[1] Easy\n"+
                                  "[2] Medium\n"+
                                  "[3] Hard\n"+
-                                 "[B] Back \n",["1","2","3","B"])
+                                 "[B] Back \n\n"+
+                                "Please type a command and press enter:",["1","2","3","B"])
         if answer == "b":
             return False
         elif answer not in ("1","2","3"):
@@ -99,7 +101,8 @@ class MainRun(object):
                                  "[C] Player vs. Computer \n"+
                                  "[T] Tournament \n"+
                                  "[B] Back \n"+
-                                 "[Q] Quit",["P","C","T","B","Q"])
+                                 "[Q] Quit\n\n"+
+                                "Please type a command and press enter:",["P","C","T","B","Q"])
         self.main_menu = False
         self.change_name = False
 
