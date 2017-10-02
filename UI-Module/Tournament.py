@@ -68,7 +68,8 @@ class Tournament(object):
                                  "\n\n"+
                                  "[L] Show Leaderboard\n"+
                                  "[B] Back to next match\n"+
-                                 "[Q] Quit\n",["L","B","Q"])
+                                 "[Q] Quit \n\n"+
+                                "Please type a command and press enter:",["L","B","Q"])
         if answer == "l":
             self.show_scoreboard = False
             self.show_leaderboard = True
@@ -144,7 +145,8 @@ class Tournament(object):
                                  "\n\n"+
                                  "[S] Show Scoreboard\n"+
                                  "[B] Back to next match\n"+
-                                 "[Q] Quit\n",["S","B","Q"])
+                                 "[Q] Quit\n\n"+
+                                "Please type a command and press enter:",["S","B","Q"])
         if answer == "s":
             self.show_scoreboard = True
             self.show_leaderboard = False
@@ -200,7 +202,8 @@ class Tournament(object):
         answer = self.ask_action(question +
                                  "[S] Show Scoreboard \n"+
                                  "[L] Show Leaderboard \n"+
-                                 "[Q] Quit",alts)
+                                 "[Q] Quit\n\n"+
+                                "Please type a command and press enter:",alts)
         
         if answer == "m":
             print("The new tournament game "+
@@ -244,7 +247,7 @@ class Tournament(object):
             question += "[S] Start Tournament ("+str(no_player)+" players → "+str(no_games)+" games)\n"              
         question += "[B] Back \n[Q] Quit \n\nPlayers in tournament so far:\n"
         question += "\n".join(self.backend.getListOfPlayerNames()) + "\n"
-
+        question += "\nPlease type a command and press enter:"
         if can_start:
             answer = self.ask_action(question,["A","S","B","Q"])
         else:
