@@ -1,6 +1,6 @@
 import re
 from enum import IntEnum
-from random import choice
+import random
 
 class Backend(object):
   """
@@ -21,7 +21,7 @@ class Backend(object):
     self.scoreboard = []
     self.match_list = []
     self.next_match_num = 0
-    self.tiebreakpts = []
+    self.tiebreakpts = [0, 0, 0, 0, 0, 0, 0, 0]
     self.winners = []
     self.winnername = ""
     
@@ -138,10 +138,34 @@ class Backend(object):
      Returns a tuple boolean, string where the boolean is True on success, False otherwise and the string shall in such cases contain a descriptive error message."""
   def startTournament(self, difficulty):
     if self.in_tournament is False:
-      if len(self.player_list) < 2:
+      if False:
         return False, "Cannot start a tournament with less than 2 players!"
       else:
         self.in_tournament = True
+        """
+        Fill any remaining player slots with AI players
+        """
+        ainum = 0
+        for x in range(len(self.player_list), 8):
+          aidiff = playertype.human
+          if difficulty == 0:
+            aidiff = playertype.ai_easy
+          elif difficulty == 1:
+            aidiff = random.randint(1,2)
+          elif difficulty == 2:
+            aidiff = random.randint(1,3)
+          elif difficulty == 3:
+            aidiff = playertype.ai_hard
+          ainame = "AI" + str(ainum)
+          while True:
+            boolean, msg = self.addNewAIPlayerName(ainame, aidiff)
+            if boolean is False:
+              ainum += 1
+              ainame = "AI" + str(ainum)
+            else:
+              break
+          print("Added AI player \"" + ainame + "\".")
+          ainum += 1
         """ 
         Set up the empty table (full of 'winner.undef' because no matches have been played yet)
         """
@@ -164,25 +188,6 @@ class Backend(object):
         """
         for x in range(0, len(self.player_list)*(len(self.player_list)-1)-1):
           self.match_list.append([self.match_list[x][1], self.match_list[x][0]])
-        """
-        Fill any remaining player slots with AI players
-        """
-        ainum = 0
-        for x in range(len(self.player_list), 8):
-          aidiff = playertype.human
-          if difficulty == 0:
-            aidiff = playertype.easy
-          elif difficulty == 1:
-            aidiff = random.choice([playertype.easy, playertype.medium])
-          elif difficulty == 2:
-            aidiff = random.choice([playertype.easy, playertype.medium, playertype.hard])
-          elif difficulty == 3:
-            aidiff = playertype.hard
-          ainame = "AI " + ainum
-          while self.addNewAIPlayerName(ainame, aidiff) == false:
-            ainum += 1
-            ainame = "AI " + ainum
-          ainum += 1
         return True, self._name_process(self.main_player)
     else:
       return False, "The tournament has already been started!"
@@ -197,7 +202,8 @@ class Backend(object):
       self.scoreboard = []
       self.match_list = []
       self.next_match_num = 0
-      return True, self._name_process(name)
+      self.tiebreakpts = [0, 0, 0, 0, 0, 0, 0, 0]
+      return True, ""
 
   """getScoreboard gets the scoreboard if the tournament is in progress. The scoreboard is the table which keeps track of who has won/lost/drawn against who. 
      If the tournament is in progress, the scoreboard is returned. Else boolean, string is returned where the boolean is False and the string is a suitable error message."""
@@ -247,7 +253,7 @@ class Backend(object):
         winpts = 1
         losspts = -1
         drawpts = 0
-        score = winpts*wins+drawpts*draws+losspts*losses+tiebreakpts[x]
+        score = winpts*wins+drawpts*draws+losspts*losses+self.tiebreakpts[x]
         if leaderboard == []:
           leaderboard.append([name, wins, draws, losses, score, ptype])
         else:
