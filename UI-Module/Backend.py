@@ -96,7 +96,10 @@ class Backend(object):
       return "Please input the player's number in numerical form."
 
   def getListOfPlayerNames(self):
-    return self.player_list
+    name_list = []
+    for player in self.player_list:
+      name_list.append(player[0])
+    return name_list
 
   """getNextMatch gets the players participating in the upcoming match from the match list.
      Returns the names of the players participating in the upcoming match according to the match list if the tournament is currently in progress, returns two empty strings otherwise."""
