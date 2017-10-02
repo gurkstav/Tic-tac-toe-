@@ -15,7 +15,7 @@ class Backend(object):
     player_list is used to return player's name according to index (set are not indexed).    
     """
     self.main_player = 'Player1'
-    self.player_list = [self.main_player]
+    self.player_list = [[self.main_player, playertype.human]]
     self.player_set = {self.main_player}
     self.in_tournament = False
     self.scoreboard = []
@@ -50,7 +50,7 @@ class Backend(object):
       self.player_set.remove(self.main_player)
       self.player_set.add(name)
       self.main_player = name
-      self.player_list[0] = name
+      self.player_list[0] = [name, playertype.human]
     return name_valid, current_message
 
   def addNewPlayerName(self, name):
@@ -61,15 +61,37 @@ class Backend(object):
     else:
       if name_valid is True:
         self.player_set.add(name)
-        self.player_list.append(name)
+        self.player_list.append([name, playertype.human])
     return name_valid, current_message
+
+  def addNewAIPlayerName(self, name, ptype):
+    if ptype != playertype.human:
+      name_valid, current_message = self._name_process(name)
+      if name in self.player_set:
+        name_valid = False
+        current_message = "There is already a player with the same name!"
+      else:
+        if name_valid is True:
+          self.player_list.append([name, ptype])
+      return name_valid, current_message
+    else:
+      return False, "AI players need to have an AI player type!"
 
   def getPlayerName(self, player_num):
     try:
       if (player_num-1) < 0 or (player_num-1) >= len(self.player_list):
         return "The provided number is outside the range of the player list!"  
       else: 
-        return self.player_list[player_num-1]
+        return self.player_list[player_num-1][0]
+    except:
+      return "Please input the player's number in numerical form."
+
+  def getPlayerType(self, player_num):
+    try:
+      if (player_num-1) < 0 or (player_num-1) >= len(self.player_list):
+        return "The provided number is outside the range of the player list!"  
+      else: 
+        return self.player_list[player_num-1][1]
     except:
       return "Please input the player's number in numerical form."
 
@@ -81,7 +103,7 @@ class Backend(object):
   def getNextMatch(self):
     if self.in_tournament is True:
       if self.next_match_num < len(self.player_list)*(len(self.player_list)-1):
-        return self.getPlayerName(self.match_list[self.next_match_num][0]+1), self.getPlayerName(self.match_list[self.next_match_num][1]+1)
+        return [[self.getPlayerName(self.match_list[self.next_match_num][0]+1), self.getPlayerType(self.match_list[self.next_match_num][0]+1)], [self.getPlayerName(self.match_list[self.next_match_num][1]+1), self.getPlayerType(self.match_list[self.next_match_num][0]+1)]]
       else:
         self.calculateWinners()
         if len(self.winners) == 1:
@@ -111,7 +133,7 @@ class Backend(object):
 
   """startTournament generates the necessary data structures (scoreboard, match_list, next_match_num) in memory and sets the in_tournament flag to indicate that the tournament is currently in progress.
      Returns a tuple boolean, string where the boolean is True on success, False otherwise and the string shall in such cases contain a descriptive error message."""
-  def startTournament(self):
+  def startTournament(self, difficulty):
     if self.in_tournament is False:
       if len(self.player_list) < 2:
         return False, "Cannot start a tournament with less than 2 players!"
@@ -138,7 +160,26 @@ class Backend(object):
         Generate the second half of the match list by mirroring the first 
         """
         for x in range(0, len(self.player_list)*(len(self.player_list)-1)-1):
-          self.match_list.append([self.match_list[x][1], self.match_list[x][0]]) 
+          self.match_list.append([self.match_list[x][1], self.match_list[x][0]])
+        """
+        Fill any remaining player slots with AI players
+        """
+        ainum = 0
+        for x in range(len(self.player_list), 8):
+          aidiff = playertype.human
+          if difficulty == 0:
+            aidiff = playertype.easy
+          elif difficulty == 1:
+            aidiff = random.choice([playertype.easy, playertype.medium])
+          elif difficulty == 2:
+            aidiff = random.choice([playertype.easy, playertype.medium, playertype.hard])
+          elif difficulty == 3:
+            aidiff = playertype.hard
+          ainame = "AI " + ainum
+          while self.addNewAIPlayerName(ainame, aidiff) == false:
+            ainum += 1
+            ainame = "AI " + ainum
+          ainum += 1
         return True, self._name_process(self.main_player)
     else:
       return False, "The tournament has already been started!"
@@ -176,6 +217,7 @@ class Backend(object):
         draws = 0
         losses = 0
         score = 0
+        ptype = self.getPlayerType(x+1)
         """ 
         compute score for home games 
         """ 
@@ -204,7 +246,7 @@ class Backend(object):
         drawpts = 0
         score = winpts*wins+drawpts*draws+losspts*losses+tiebreakpts[x]
         if leaderboard == []:
-          leaderboard.append([name, wins, draws, losses, score])
+          leaderboard.append([name, wins, draws, losses, score, ptype])
         else:
           """
           insert score at the right point on the leaderboard 
@@ -213,7 +255,7 @@ class Backend(object):
           inserted = False
           while index < len(leaderboard):
             if score > leaderboard[index][4]:
-              leaderboard.insert(index, [name, wins, draws, losses, score])
+              leaderboard.insert(index, [name, wins, draws, losses, score, ptype])
               inserted = True
               break
             index += 1
@@ -315,4 +357,23 @@ class winner(IntEnum):
   away = 2
   """
   Other/second player won
+  """
+
+
+class playertype(IntEnum):
+  human = 0
+  """
+  Human player
+  """
+  ai_easy = 1
+  """
+  Easy AI player
+  """
+  ai_medium = 2
+  """
+  Medium AI player
+  """
+  ai_hard = 3
+  """
+  Hard AI player
   """
