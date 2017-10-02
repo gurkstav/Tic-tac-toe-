@@ -187,9 +187,9 @@ class Tournament(object):
         match and current alternativs.
         :return:nothing
         """
-        self.backend.startTournament()
+        self.backend.startTournament(self.tournamnet_diff)
         a,b = self.backend.getNextMatch()
-        ended = not a and not b
+        ended = not a[0] and not b[0]
         if ended:
             winner = self.backend.getWinner()
             question = "All Games in this tournament have been played. Winner is " + winner + "\n\n"
@@ -197,7 +197,7 @@ class Tournament(object):
             alts = ["B","S","L","Q"]
         else:
             question = "Tournament - Next Match \n\nNext Match will be "
-            question += str(a) + " vs. " + str(b) + "\n\n[M] Start match \n"
+            question += str(a[0]) + " vs. " + str(b[0]) + "\n\n[M] Start match \n"
             alts = ["M","S","L","Q"]
 
         answer = self.ask_action(question +
@@ -215,10 +215,19 @@ class Tournament(object):
             time.sleep(10)
             os.system('clear')  # on linux / os x
             players = self.backend.getListOfPlayerNames()
-            #TODO if AI, pass along AI diff to GP
-            #TODO winner = self.gameModule.start_game(players,difficulty)
-            #TODO IF home or away (a or b)
-            #TODO self.backend.setMatchResult(enum.winner)
+            if a[1] and b[1]:
+                #BOTH AI, a[1] is 1-3 if AI, same for b[1]
+                #winner = self.gameModule.start_game_AIAI(players,a[1],b[1])
+                pass
+            elif a[1] or b[1]:
+                #Atleast one AI
+                #winner = self.gameModule.start_game_AI(players,a[1],b[1])
+                pass
+            else:
+                #TODO winner = self.gameModule.start_game(players)
+                #TODO IF home or away (a or b)
+                #TODO self.backend.setMatchResult(enum.winner)
+                pass
             
             pass
         elif answer == "b":
