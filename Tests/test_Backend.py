@@ -91,18 +91,6 @@ class TestBackend(unittest.TestCase):
 
     def tearDown(self):
         print('Finished!')
-    '''
-    def test_getName(self): #要測試的功能, 名稱需test開頭
-        print 'test getNme', 
-        self.assertEqual(self.p.getName(), 'John' ) 
-    def test_setAge(self): 
-        print 'test setAge', 
-        self.assertEqual(self.p.age, 10 ) 
-        self.p.setAge(18) 
-        self.assertNotEqual(self.p.age, 10 ) 
-    def tearDown(self): # 每個測試結束 
-        print 'final'
-    '''
  
 if __name__ == "__main__": 
     unittest.main()
