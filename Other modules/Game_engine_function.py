@@ -1,4 +1,5 @@
 from __future__ import print_function
+from AI import AI
 import random
 import os
 
@@ -25,8 +26,10 @@ class game_engine(object):
     self.X = -1
     self.O = 1
     self.user_use = self.O
+    self.AI_use = self.X
     self.win_line = [-1,-1,-1]
     self.winner = 0
+    self.AI = AI()
 
   def _be_first(self,user_or_cpu):
     """
@@ -45,8 +48,12 @@ class game_engine(object):
     """
     if X_or_O.lower() == "o":
       self.user_use = self.O
+      self.AI_use = self.X
+      self.AI.init(3, 1)
     elif X_or_O.lower() == "x":
       self.user_use = self.X
+      self.AI_use = self.O
+      self.AI.init(3, 2)
     else:
       pass
 
@@ -64,7 +71,7 @@ class game_engine(object):
         else:
           self.current_OX[place] = self.X
     except:
-      self._assign_value(input("Out of range or invalid input! Choose again:"))
+      self._assign_value(input("Input " + str(place) + " is out of range or invalid input! Choose again:"))
 
   def _win_line_recode(self,end_flag,who_win,which_line):
     self.end_game = end_flag
@@ -199,16 +206,22 @@ class game_engine(object):
     """
     Here only apply random seletion, we can develop some fancy strategy in the future
     """
-    cpu_select_set = []
-    for element in self.current_OX:
-      if element == 0:
-        cpu_select_set.append(self.current_OX.index(element))
-    cpu_select_place = (random.choice(cpu_select_set))
+    cpu_playfield = [[],[],[]],[[],[],[]],[[],[],[]]
+    for x in range(0, 3):
+      for y in range(0, 3):
+        if self.current_OX[3*y+x] == 0:
+          cpu_playfield[x][y] = 0
+        elif self.current_OX[3*y+x] == self.X:
+          cpu_playfield[x][y] = 1
+        else:
+          cpu_playfield[x][y] = 2
+    cpu_move_x, cpu_move_y = self.AI.makeMove(cpu_playfield)
+    cpu_select_place_num = 3*cpu_move_y+cpu_move_x
     
-    if self.user_use == self.O:
-      self.current_OX[cpu_select_place] = self.X
+    if self.AI_use == self.X:
+      self.current_OX[cpu_select_place_num] = self.X
     else:
-      self.current_OX[cpu_select_place] = self.O
+      self.current_OX[cpu_select_place_num] = self.O
   
   def _intro(self):
     """
