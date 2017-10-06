@@ -2,7 +2,10 @@ import sys
 import os
 import time
 
+import gameplatform as g
+
 from Backend import *
+from Player import PlayerAI
 
 class Tournament(object):
     """
@@ -96,42 +99,44 @@ class Tournament(object):
             offset = 10-len(x)
             result += " " + x + (" "*offset) + "│"
 
-        count  = 0
-        count2 = 0
+        row  = 0
+        column = 0
         result += "\n" + "─"*10
 
+        #creates row under player names
         for x in player_list:
             result += "┼"
             if x != player_list[-1]:
                 result += "─"*11
             else:
                 result += "─"*11 + "┤"
-        for x in player_list:
-            offset = 10-len(x)
-            result = result + "\n" + player_list[count] + (" "*offset) + "│"
-            for x2 in player_list:
-                if count2 == count:
+        #traverses and creates each player row.
+        for away in player_list:
+            offset = 10-len(away)
+            result = result + "\n" + player_list[row] + (" "*offset) + "│"
+            for home in player_list:
+                if row == column:
                     result += "     x     "
-                elif scoreboard[count][0] == winner.undef:
+                elif scoreboard[column][row] == winner.undef:
                     result += "           "
-                elif count2 < count:
-                    if scoreboard[count][1] == winner.draw:
-                        result +="    Draw   "
-                    elif scoreboard[count][1] == winner.home:
-                        result +=" " + x + (" "*(10-len(x)))
+                elif scoreboard[column][row] == winner.draw:
+                    result +="    Draw   "
+                #players home matches
+                elif row < column:
+                    if scoreboard[column][row] == winner.home:
+                        result +=" " + away + (" "*(10-len(away)))
                     else:
-                        result +=" " + x2 + (" "*(10-len(x2)))
+                        result +=" " + home + (" "*(10-len(home)))
+                #players away matches
                 else:
-                    if scoreboard[count][1] == winner.draw:
-                        result +="    Draw   "
-                    elif scoreboard[count][0] == winner.home:
-                        result +=" " + x + (" "*(10-len(x)))
+                    if scoreboard[column][row] == winner.home:
+                        result +=" " + home + (" "*(10-len(home)))
                     else:
-                        result  +=" " + x2 + (" "*(10-len(x2)))
-                count2 += 1
+                        result  +=" " + away + (" "*(10-len(away)))
+                column += 1
                 result += "│"
-            count  = count+1
-            count2 = 0
+            row    = row+1
+            column = 0
             
         return (result)
 
@@ -180,6 +185,15 @@ class Tournament(object):
             count += 1
         return (result)
         
+    def report_winner(self,home,away,result):
+        if not result:
+            self.backend.setMatchResult(winner.draw)
+            
+        elif result == home:
+            self.backend.setMatchResult(winner.home)
+
+        elif result == away:
+            self.backend.setMatchResult(winner.away)
             
     def start_tournament_show(self):
         """
@@ -189,6 +203,8 @@ class Tournament(object):
         """
         self.backend.startTournament(self.tournamnet_diff)
         a,b = self.backend.getNextMatch()
+        print(a)
+        print(b)
         ended = not a[0] and not b[0]
         if ended:
             winner = self.backend.getWinner()
@@ -208,28 +224,58 @@ class Tournament(object):
         
         if answer == "m":
             print("The new tournament game "+
-                  str(a)+
+                  str(a[0])+
                   " vs. "+
-                  str(b)+
+                  str(b[0])+
                   " is going to start.")
-            time.sleep(10)
+         #   time.sleep(3)
             os.system('clear')  # on linux / os x
             players = self.backend.getListOfPlayerNames()
+            
             if a[1] and b[1]:
                 #BOTH AI, a[1] is 1-3 if AI, same for b[1]
                 #winner = self.gameModule.start_game_AIAI(players,a[1],b[1])
-                pass
-            elif a[1] or b[1]:
-                #Atleast one AI
+                AIplayer1 = g.PlayerAI(a[0],True,a[1])
+                AIplayer2 = g.PlayerAI(b[0],True,b[1])
+                AIGame = g.AIGame(AIplayer1,AIplayer2)
+                winner = AIGame.startGame()
+                self.report_winner(a[0],b[0],winner)
+                time.sleep(5)
+                                 
+            elif a[1]:
+                #a = AI
+                print("vs AI")
                 #winner = self.gameModule.start_game_AI(players,a[1],b[1])
-                pass
+                AIplayer1 = g.PlayerAI(a[0],True,a[1])
+                Playerone = g.PlayerAI(b[0],False,3)
+                PvAIGame = g.AIGame(Playerone,AIplayer1)
+                winner = PvAIGame.startGame()
+                self.report_winner(b[0],a[0],winner)
+                print("vs AI")
+                time.sleep(5)                
+
+            elif b[1]:
+                #b = AI
+                print("vs AI")
+                Playerone = g.PlayerAI(a[0],False,3)
+                AIplayer1 = g.PlayerAI(b[0],True,b[1])
+                PvAIGame = g.AIGame(Playerone,AIplayer1)
+                winner = PvAIGame.startGame()
+                self.report_winner(a[0],b[0],winner)
+                time.sleep(5)                
             else:
+                print ("PVP")
                 #TODO winner = self.gameModule.start_game(players)
                 #TODO IF home or away (a or b)
                 #TODO self.backend.setMatchResult(enum.winner)
-                pass
-            
+                player1 = g.RealPlayer(a[0], 'X')
+                player2 = g.RealPlayer(b[0], 'O')
+                game = g.Game(player1, player2)
+                winner = game.enter_game_loop()
+                self.report_winner(a[0],b[0],winner)
+                time.sleep(5)                
             pass
+        
         elif answer == "b":
             self.end_tournament = True
             self.start_tournament = False

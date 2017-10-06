@@ -2,8 +2,11 @@ import sys
 import os
 import time
 
+import gameplatform as g
+
 from Backend import *
 from Tournament import *
+from Player import PlayerAI
 
 class MainRun(object):
     """
@@ -88,23 +91,39 @@ class MainRun(object):
                                 "Please type a command and press enter:",["P","C","T","B","Q"])
         self.main_menu = False
         self.change_name = False
-        player1 = self.tournament.backend.getPlayerName(1)
+        player1Name = self.tournament.backend.getPlayerName(1)
         if answer == "p":
 
-            print ("The new game "+player1+" vs. Player2 is going to start.")
-            time.sleep(10)
-            #TODO: gameModule.start_game([player1, "Player2"],0)
-  
+            print ("The new game "+player1Name+" vs. Player2 is going to start.")
+            player1 = g.RealPlayer(player1Name, 'X')
+            player2 = g.RealPlayer('Player2', 'O')
+            #Returns winner but is not needed?
+            g.Game(player1, player2).enter_game_loop()
+            time.sleep(5)                
         elif answer == "c":
             difficulty = self.tournament.set_difficulty(False,1)
+            Playerone = g.PlayerAI(player1Name,False,3)
             tier = ["undef","Easy","Medium","Hard"]
             if difficulty:
-                print ("The new game player vs. computer ("+
-                       tier[difficulty]+
-                       ") is going to start.")
-                time.sleep(10)
-                #TODO: gameModule.start_game_ai([player1],difficulty)
-
+                #print ("The new game player vs. computer ("+
+                #tier[difficulty]+
+                #") is going to start.")
+                #time.sleep(10)
+                if difficulty == 1:
+                    AIplayer1 = g.PlayerAI("AI",True,1)
+                    AIdiff1 = g.AIGame(Playerone,AIplayer1)
+                    winner = AIdiff1.startGame()
+                    time.sleep(5)                
+                elif difficulty == 2:
+                    AIplayer2 = g.PlayerAI("AI",True,2)
+                    AIdiff2 = g.AIGame(Playerone,AIplayer2)
+                    winner = AIdiff2.startGame()
+                    time.sleep(5)                
+                elif difficulty == 3:
+                    AIplayer3 = g.PlayerAI("AI",True,3)
+                    AIdiff3 = g.AIGame(Playerone,AIplayer3)
+                    winner = AIdiff3.startGame()
+                    time.sleep(5)                
         elif answer == "t":
             self.quit_game = self.tournament.Main()
          

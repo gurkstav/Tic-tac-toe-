@@ -106,7 +106,12 @@ class Backend(object):
   def getNextMatch(self):
     if self.in_tournament is True:
       if self.next_match_num < len(self.player_list)*(len(self.player_list)-1):
-        return [[self.getPlayerName(self.match_list[self.next_match_num][0]+1), self.getPlayerType(self.match_list[self.next_match_num][0]+1)], [self.getPlayerName(self.match_list[self.next_match_num][1]+1), self.getPlayerType(self.match_list[self.next_match_num][0]+1)]]
+        return [
+          [self.getPlayerName(self.match_list[self.next_match_num][0]+1),
+           self.getPlayerType(self.match_list[self.next_match_num][0]+1)],
+          [self.getPlayerName(self.match_list[self.next_match_num][1]+1),
+           self.getPlayerType(self.match_list[self.next_match_num][1]+1)]
+        ]
       else:
         self.calculateWinners()
         if len(self.winners) == 1:
@@ -128,8 +133,10 @@ class Backend(object):
         elif winner == winner.away:
           self.tiebreakpts[self.next_match_num[1]] += 1          
       else:
-        self.scoreboard[self.match_list[self.next_match_num][1], self.match_list[self.next_match_num][0]] = winner
-      next_match_num += 1
+        x,y = self.match_list[self.next_match_num]
+        self.scoreboard[x][y] = winner
+        self.match_list[self.next_match_num][0] = winner
+        self.next_match_num += 1
       return True
     else:
       return False
@@ -148,14 +155,12 @@ class Backend(object):
         ainum = 0
         for x in range(len(self.player_list), 8):
           aidiff = playertype.human
-          if difficulty == 0:
+          if difficulty == 1:
             aidiff = playertype.ai_easy
-          elif difficulty == 1:
-            aidiff = random.randint(1,2)
           elif difficulty == 2:
-            aidiff = random.randint(1,3)
+            aidiff = random.randint(1,2)
           elif difficulty == 3:
-            aidiff = playertype.ai_hard
+            aidiff = random.randint(1,3)
           ainame = "AI" + str(ainum)
           while True:
             boolean, msg = self.addNewAIPlayerName(ainame, aidiff)
@@ -166,6 +171,7 @@ class Backend(object):
               break
           print("Added AI player \"" + ainame + "\".")
           ainum += 1
+          print(self.player_list)
         """ 
         Set up the empty table (full of 'winner.undef' because no matches have been played yet)
         """
