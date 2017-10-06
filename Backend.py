@@ -158,9 +158,9 @@ class Backend(object):
           if difficulty == 1:
             aidiff = playertype.ai_easy
           elif difficulty == 2:
-            aidiff = playertype.ai_medium
+            aidiff = random.randint(1,2)
           elif difficulty == 3:
-            aidiff = playertype.ai_hard
+            aidiff = random.randint(1,3)
           ainame = "AI" + str(ainum)
           while True:
             boolean, msg = self.addNewAIPlayerName(ainame, aidiff)
