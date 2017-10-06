@@ -209,8 +209,6 @@ class Tournament(object):
         """
         self.backend.startTournament(self.tournamnet_diff)
         a,b = self.backend.getNextMatch()
-        print(a)
-        print(b)
         ended = not a[0] and not b[0]
         if ended:
             winner = self.backend.getWinner()
@@ -239,8 +237,6 @@ class Tournament(object):
             players = self.backend.getListOfPlayerNames()
             
             if a[1] and b[1]:
-                #BOTH AI, a[1] is 1-3 if AI, same for b[1]
-                #winner = self.gameModule.start_game_AIAI(players,a[1],b[1])
                 AIplayer1 = g.PlayerAI(a[0],True,a[1])
                 AIplayer2 = g.PlayerAI(b[0],True,b[1])
                 AIGame = g.AIGame(AIplayer1,AIplayer2)
@@ -250,19 +246,15 @@ class Tournament(object):
                                  
             elif a[1]:
                 #a = AI
-                print("vs AI")
-                #winner = self.gameModule.start_game_AI(players,a[1],b[1])
                 AIplayer1 = g.PlayerAI(a[0],True,a[1])
                 Playerone = g.PlayerAI(b[0],False,3)
                 PvAIGame = g.AIGame(Playerone,AIplayer1)
                 winner = PvAIGame.startGame()
                 self.report_winner(b[0],a[0],winner)
-                print("vs AI")
                 time.sleep(5)                
 
             elif b[1]:
                 #b = AI
-                print("vs AI")
                 Playerone = g.PlayerAI(a[0],False,3)
                 AIplayer1 = g.PlayerAI(b[0],True,b[1])
                 PvAIGame = g.AIGame(Playerone,AIplayer1)
@@ -270,10 +262,6 @@ class Tournament(object):
                 self.report_winner(a[0],b[0],winner)
                 time.sleep(5)                
             else:
-                print ("PVP")
-                #TODO winner = self.gameModule.start_game(players)
-                #TODO IF home or away (a or b)
-                #TODO self.backend.setMatchResult(enum.winner)
                 player1 = g.RealPlayer(a[0], 'X')
                 player2 = g.RealPlayer(b[0], 'O')
                 game = g.Game(player1, player2)
