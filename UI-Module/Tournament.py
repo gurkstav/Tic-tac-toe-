@@ -186,6 +186,12 @@ class Tournament(object):
         return (result)
         
     def report_winner(self,home,away,result):
+                """
+        reports the winner from the match and stores it in backend.
+        :param home: playername for the home player
+        :param away: playername for the away player
+        :param result: The result according to the enum winner
+        """
         if not result:
             self.backend.setMatchResult(winner.draw)
             
