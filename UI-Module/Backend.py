@@ -171,7 +171,6 @@ class Backend(object):
               break
           print("Added AI player \"" + ainame + "\".")
           ainum += 1
-          print(self.player_list)
         """ 
         Set up the empty table (full of 'winner.undef' because no matches have been played yet)
         """
