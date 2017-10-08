@@ -79,6 +79,7 @@ class Tournament(object):
             self.show_leaderboard = True
         elif answer == "b":
             self.start_tournament = True
+            self.show_scoreboard = False
         elif answer == "q":
             self.quit_game = True
         else:
@@ -159,6 +160,7 @@ class Tournament(object):
             self.show_leaderboard = False
         elif answer == "b":
             self.start_tournament = True
+            self.show_leaderboard = False
         elif answer == "q":
             self.quit_game = True
         else:
@@ -210,7 +212,7 @@ class Tournament(object):
         """
         self.backend.startTournament(self.tournamnet_diff)
         a,b = self.backend.getNextMatch()
-        ended = not a[0] and not b[0]
+        ended = not a and not b
         if ended:
             winner = self.backend.getWinner()
             question = "All Games in this tournament have been played. Winner is " + winner + "\n\n"
@@ -281,6 +283,9 @@ class Tournament(object):
             pass
         
         elif answer == "b":
+            if ended:
+                self.backend.endTournament()
+                self.backend.deletePlayerSet()
             self.end_tournament = True
             self.start_tournament = False
             self.back = True
