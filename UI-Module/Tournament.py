@@ -2,7 +2,10 @@ import sys
 import os
 import time
 
+import gameplatform as g
+
 from Backend import *
+from Player import PlayerAI
 
 class Tournament(object):
     """
@@ -13,15 +16,21 @@ class Tournament(object):
         """
         'Main_Tournament' object.
         :param tournament: True if the tournament menu is to be shown
+        :param show_scoreboard: True if scoreboard is to be shown
+        :param show_leaderboard: True if leaderboard is to be shown
         :param addNewPlayer: True if addNewPlayer is to be shown
         :param start_tournament: True if start tournament menu is to be shown
         :param back: is to be true if the user want to be back to the main menu
         :param quit: is to be true if quitting the game is wished
+        :param Main(): starts the main loop
         """
         self.tournament = True
+        self.show_scoreboard = False
+        self.show_leaderboard = False
         self.addNewPlayer = False
-        self.back = False
         self.start_tournament = False
+        self.back = False
+        self.end_tournament = False
         self.tournamnet_diff = 0
         self.quit_game = False
         self.backend = Backend()
@@ -44,13 +53,251 @@ class Tournament(object):
                 print (errorMSG)
                 answer = input()
     
-            if answer[0].upper() not in alts or len(answer) > 1:
+            if answer[0].upper() not in alts:
                 os.system('clear')  # on linux / os x
                 print (errorMSG)
                 answer = input()
             else:
                 os.system('clear')  # on linux / os x
                 return answer[0].lower()
+
+
+    def draw_scoreboard(self):
+        """
+        Draws the scoreboard for the players and menu options
+        :return: nothing
+        """
+        answer = self.ask_action("Tournament - Scoreboard \n\n"+
+                                 self.stringify_scoreboard()+
+                                 "\n\n"+
+                                 "[L] Show Leaderboard\n"+
+                                 "[B] Back to next match\n"+
+                                 "[Q] Quit \n\n"+
+                                "Please type a command and press enter:",["L","B","Q"])
+        if answer == "l":
+            self.show_scoreboard = False
+            self.show_leaderboard = True
+        elif answer == "b":
+            self.start_tournament = True
+            self.show_scoreboard = False
+        elif answer == "q":
+            self.quit_game = True
+        else:
+            self.draw_scoreboard()
+
+
+    def stringify_scoreboard(self):
+        """
+        Support function for draw_scoreboard. 
+        Is supposed to create a string visualising the actual scoreboard.
+        :return: A string containing the scoreboard
+        """
+        scoreboard  = self.backend.getScoreboard()
+        player_list = self.backend.getListOfPlayerNames()
+        result = "          │"
+        
+        for x in player_list:
+            offset = 10-len(x)
+            result += " " + x + (" "*offset) + "│"
+
+        row  = 0
+        column = 0
+        result += "\n" + "─"*10
+
+        #creates row under player names
+        for x in player_list:
+            result += "┼"
+            if x != player_list[-1]:
+                result += "─"*11
+            else:
+                result += "─"*11 + "┤"
+        #traverses and creates each player row.
+        for away in player_list:
+            offset = 10-len(away)
+            result = result + "\n" + player_list[row] + (" "*offset) + "│"
+            #traverserse and creates column for away-players results.
+            for home in player_list:
+                if row == column:
+                    result += "     x     "
+                elif scoreboard[column][row] == winner.undef:
+                    result += "           "
+                elif scoreboard[column][row] == winner.draw:
+                    result +="    Draw   "
+                #player's away matches
+                elif row < column:
+                    if scoreboard[column][row] == winner.home:
+                        result +=" " + away + (" "*(10-len(away)))
+                    else:
+                        result +=" " + home + (" "*(10-len(home)))
+                #player's home matches
+                else:
+                    if scoreboard[column][row] == winner.home:
+                        result +=" " + home + (" "*(10-len(home)))
+                    else:
+                        result  +=" " + away + (" "*(10-len(away)))
+                column += 1
+                result += "│"
+            row    = row+1
+            column = 0
+            
+        return (result)
+
+    
+    def draw_leaderboard(self):
+        """
+        Draws the leaderboard and the associated menu options.
+        :return:nothing.
+        """
+        answer = self.ask_action("Tournament - Leaderboard\n\n"+
+                                 self.stringify_leaderboard()+
+                                 "\n\n"+
+                                 "[S] Show Scoreboard\n"+
+                                 "[B] Back to next match\n"+
+                                 "[Q] Quit\n\n"+
+                                "Please type a command and press enter:",["S","B","Q"])
+        if answer == "s":
+            self.show_scoreboard = True
+            self.show_leaderboard = False
+        elif answer == "b":
+            self.start_tournament = True
+            self.show_leaderboard = False
+        elif answer == "q":
+            self.quit_game = True
+        else:
+            self.draw_leaderboard()
+
+
+    def stringify_leaderboard(self):
+        """
+        support function for draw_leaderboard.
+        Creates a string visualising the leaderboard.
+        :return: A string containing the leaderboard.
+        """
+        leaderboard = self.backend.getLeaderboard()
+        result = "  │           │   win    draws    losses    points\n"
+        count = 0
+        for x in leaderboard:
+            offset = 10-len(x[0])
+            result += str(count+1) + " │"
+            result += " " + x[0] + (" "*offset) + "│"
+            result += "    " + str(x[1])
+            result += "       " + str(x[2])
+            result += "        " + str(x[3])
+            result += "         " + str(x[4])
+            result += "\n"
+            count += 1
+        return (result)
+        
+    def report_winner(self,home,away,result):
+        """
+        reports the winner from the match and stores it in backend.
+        :param home: playername for the home player
+        :param away: playername for the away player
+        :param result: The result according to the enum winner
+        """
+        if not result:
+            self.backend.setMatchResult(winner.draw)
+            
+        elif result == home:
+            self.backend.setMatchResult(winner.home)
+
+        elif result == away:
+            self.backend.setMatchResult(winner.away)
+            
+    def start_tournament_show(self):
+        """
+        Draws the current tournament state with upcoming
+        match and current alternativs.
+        :return:nothing
+        """
+        self.backend.startTournament(self.tournamnet_diff)
+        a,b = self.backend.getNextMatch()
+        ended = not a and not b
+        if ended:
+            winner = self.backend.getWinner()
+            question = "All Games in this tournament have been played. Winner is " + winner + "\n\n"
+            question += "\n\nCongratulations! \n\n[B] Back to Main Menu \n"
+            alts = ["B","S","L","Q"]
+        else:
+            question = "Tournament - Next Match \n\nNext Match will be "
+            question += str(a[0]) + " vs. " + str(b[0]) + "\n\n[M] Start match \n"
+            alts = ["M","S","L","Q"]
+
+        answer = self.ask_action(question +
+                                 "[S] Show Scoreboard \n"+
+                                 "[L] Show Leaderboard \n"+
+                                 "[Q] Quit\n\n"+
+                                "Please type a command and press enter:",alts)
+        
+        if answer == "m":
+           # print("The new tournament game "+
+            #      str(a[0])+
+             #     " vs. "+
+              #    str(b[0])+
+               #   " is going to start.")
+           # time.sleep(3)
+            os.system('clear')  # on linux / os x
+            players = self.backend.getListOfPlayerNames()
+            """
+            In the following if statements there is an bridged version of the player objects.
+            This since backend.py keeps the tournament players but 
+            GE and GP reuqires player objects according to their specs.
+            """
+            if a[1] and b[1]:
+                #AI vs AI
+                AIplayer1 = g.PlayerAI(a[0],True,a[1])
+                AIplayer2 = g.PlayerAI(b[0],True,b[1])
+                AIGame = g.GameEngine()
+                winner = AIGame.AIvsAI(AIplayer1,AIplayer2)
+                if a[1]:
+                    self.report_winner(a[0],b[0],winner)
+                else:
+                    self.report_winner(b[0],a[0],winner)
+                print ("Winner of this match is "+winner+"!")
+                time.sleep(5)
+                                 
+            elif a[1]:
+                #a = AI
+                AIplayer1 = g.PlayerAI(a[0],True,a[1])
+                Playerone = g.PlayerAI(b[0],False,3)
+                PvAIGame = g.AIGame(Playerone,AIplayer1)
+                winner = PvAIGame.startGame()
+                self.report_winner(b[0],a[0],winner)
+                time.sleep(5)                
+
+            elif b[1]:
+                #b = AI
+                Playerone = g.PlayerAI(a[0],False,3)
+                AIplayer1 = g.PlayerAI(b[0],True,b[1])
+                PvAIGame = g.AIGame(Playerone,AIplayer1)
+                winner = PvAIGame.startGame()
+                self.report_winner(a[0],b[0],winner)
+                time.sleep(5)                
+            else:
+                player1 = g.RealPlayer(a[0], 'X')
+                player2 = g.RealPlayer(b[0], 'O')
+                game = g.Game(player1, player2)
+                winner = game.enter_game_loop()
+                self.report_winner(a[0],b[0],winner)
+                time.sleep(5)                
+            pass
+        
+        elif answer == "b":
+            if ended:
+                self.backend.endTournament()
+                self.backend.deletePlayerSet()
+            self.end_tournament = True
+            self.start_tournament = False
+            self.back = True
+            pass
+        elif answer == "s":
+            self.start_tournament = False
+            self.show_scoreboard  = True
+        elif answer == "l":
+            self.start_tournament = False
+            self.show_leaderboard = True
+        elif answer == "q":
+            self.quit_game = True
 
     def set_difficulty(self,tournament,no_player):
         """
@@ -169,16 +416,17 @@ class Tournament(object):
                 self.addNewPlayer_name()
                 
             elif self.start_tournament:
-                difficulty = self.tournamnet_diff
-                player_list = self.backend.getListOfPlayerNames()
-                self.start_tournament = False
-                self.back = True
-                #TODO group F GP
-                #self.F_GP.startGame(player_list,difficulty)
-                #TODO kill tournament object?
-                self.backend.deletePlayerSet()
+                self.start_tournament_show()
+                
+            elif self.show_scoreboard:
+                self.draw_scoreboard()
+                
+            elif self.show_leaderboard:
+                self.draw_leaderboard()
                 
             elif self.back:
+                if self.end_tournament:
+                    self.backend.endTournament()
                 self.tournament = True
                 self.back = False
                 return False
