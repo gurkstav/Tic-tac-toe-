@@ -249,10 +249,7 @@ class Tournament(object):
                 AIplayer2 = g.PlayerAI(b[0],True,b[1])
                 AIGame = g.GameEngine()
                 winner = AIGame.AIvsAI(AIplayer1,AIplayer2)
-                if a[1]:
-                    self.report_winner(a[0],b[0],winner)
-                else:
-                    self.report_winner(b[0],a[0],winner)
+                self.report_winner(a[0],b[0],winner)
                 print ("Winner of this match is "+winner+"!")
                 time.sleep(5)
                                  
