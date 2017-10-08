@@ -2,10 +2,7 @@ import sys
 import os
 import time
 
-import gameplatform as g
-
 from Backend import *
-from Player import PlayerAI
 
 class Tournament(object):
     """
@@ -230,57 +227,38 @@ class Tournament(object):
                                 "Please type a command and press enter:",alts)
         
         if answer == "m":
-           # print("The new tournament game "+
-            #      str(a[0])+
-             #     " vs. "+
-              #    str(b[0])+
-               #   " is going to start.")
-           # time.sleep(3)
             os.system('clear')  # on linux / os x
             players = self.backend.getListOfPlayerNames()
             """
-            In the following if statements there is an bridged version of the player objects.
-            This since backend.py keeps the tournament players but 
-            GE and GP reuqires player objects according to their specs.
+            In the following section "a" is home and "b" away.
+            Tournament is round robin and home always begins.
             """
             if a[1] and b[1]:
                 #AI vs AI
-                AIplayer1 = g.PlayerAI(a[0],True,a[1])
-                AIplayer2 = g.PlayerAI(b[0],True,b[1])
-                AIGame = g.GameEngine()
-                winner = AIGame.AIvsAI(AIplayer1,AIplayer2)
-                if a[1]:
-                    self.report_winner(a[0],b[0],winner)
-                else:
-                    self.report_winner(b[0],a[0],winner)
-                print ("Winner of this match is "+winner+"!")
-                time.sleep(5)
-                                 
+                #TODO F: Start game AI vs AI with the names in a[0] and b[0]
+                # and return winner name in a string to variable winner below
+                winner = ""
+                self.report_winner(a[0],b[0],winner)
+                                                 
             elif a[1]:
                 #a = AI
-                AIplayer1 = g.PlayerAI(a[0],True,a[1])
-                Playerone = g.PlayerAI(b[0],False,3)
-                PvAIGame = g.AIGame(Playerone,AIplayer1)
-                winner = PvAIGame.startGame()
+                #TODO F: Start game AI vs Player with the names in a[0] and b[0]
+                # and return winner name in a string to variable winner below
+                winner = ""
                 self.report_winner(b[0],a[0],winner)
-                time.sleep(5)                
-
+                
             elif b[1]:
                 #b = AI
-                Playerone = g.PlayerAI(a[0],False,3)
-                AIplayer1 = g.PlayerAI(b[0],True,b[1])
-                PvAIGame = g.AIGame(Playerone,AIplayer1)
-                winner = PvAIGame.startGame()
+                #TODO F: Start game Player vs AI with the names in a[0] and b[0]
+                # and return winner name in a string to variable winner below
+                winner = ""
                 self.report_winner(a[0],b[0],winner)
-                time.sleep(5)                
+                
             else:
-                player1 = g.RealPlayer(a[0], 'X')
-                player2 = g.RealPlayer(b[0], 'O')
-                game = g.Game(player1, player2)
-                winner = game.enter_game_loop()
+                #TODO F: Start game Player vs Player with the names in a[0] and b[0]
+                # and return winner name in a string to variable winner below
+                winner = ""
                 self.report_winner(a[0],b[0],winner)
-                time.sleep(5)                
-            pass
         
         elif answer == "b":
             if ended:
