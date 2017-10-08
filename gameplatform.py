@@ -705,3 +705,26 @@ class GameEngine():
             if board.board[i]!=0:
                 square=square+1
         return square
+
+    def AIvsAI(self, firstAI, secondAI):
+        """
+        This function is simple solution to AI vs AI matches.
+        It needs further development in case customer requires 
+        more advanced calculations for this scenario
+        :param firstAI: first AI player.
+        :param secondAI: second AI player.
+        :return: Winners name. 0 in case of failure
+        """
+        # Requires the possibility to fetch AI level from AI
+        if firstAI.getAIlevel() > secondAI.getAIlevel():
+            return firstAI.getPlayerName()
+        elif firstAI.getAIlevel() < secondAI.getAIlevel():
+            return secondAI.getPlayerName()
+        else:
+            winningAI = randint(1, 2)
+            if winningAI == 1:
+                return firstAI.getPlayerName()
+            elif winningAI == 2:
+                return secondAI.getPlayerName()
+            else:
+                return 0
