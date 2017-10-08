@@ -169,7 +169,7 @@ class Backend(object):
               ainame = "AI" + str(ainum)
             else:
               break
-          print("Added AI player \"" + ainame + "\".")
+        #  print("Added AI player \"" + ainame + "\".")
           ainum += 1
         """ 
         Set up the empty table (full of 'winner.undef' because no matches have been played yet)
