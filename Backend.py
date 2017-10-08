@@ -325,7 +325,7 @@ class Backend(object):
     When press back, delete all players except main player.
     It is designed because main user can change his/her name whenever he/she want.
     """
-    self.player_list = [self.main_player]
+    self.player_list = [[self.main_player,playertype.human]]
     self.player_set = {self.main_player}
 
   def remainTournamentPlayer(self):
