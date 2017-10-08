@@ -230,12 +230,12 @@ class Tournament(object):
                                 "Please type a command and press enter:",alts)
         
         if answer == "m":
-            print("The new tournament game "+
-                  str(a[0])+
-                  " vs. "+
-                  str(b[0])+
-                  " is going to start.")
-            time.sleep(3)
+           # print("The new tournament game "+
+            #      str(a[0])+
+             #     " vs. "+
+              #    str(b[0])+
+               #   " is going to start.")
+           # time.sleep(3)
             os.system('clear')  # on linux / os x
             players = self.backend.getListOfPlayerNames()
             """
