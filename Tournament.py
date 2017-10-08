@@ -114,6 +114,7 @@ class Tournament(object):
         for away in player_list:
             offset = 10-len(away)
             result = result + "\n" + player_list[row] + (" "*offset) + "│"
+            #traverserse and creates column for away-players results.
             for home in player_list:
                 if row == column:
                     result += "     x     "
@@ -121,13 +122,13 @@ class Tournament(object):
                     result += "           "
                 elif scoreboard[column][row] == winner.draw:
                     result +="    Draw   "
-                #players home matches
+                #player's away matches
                 elif row < column:
                     if scoreboard[column][row] == winner.home:
                         result +=" " + away + (" "*(10-len(away)))
                     else:
                         result +=" " + home + (" "*(10-len(home)))
-                #players away matches
+                #player's home matches
                 else:
                     if scoreboard[column][row] == winner.home:
                         result +=" " + home + (" "*(10-len(home)))
@@ -232,16 +233,25 @@ class Tournament(object):
                   " vs. "+
                   str(b[0])+
                   " is going to start.")
-         #   time.sleep(3)
+            time.sleep(3)
             os.system('clear')  # on linux / os x
             players = self.backend.getListOfPlayerNames()
-            
+            """
+            In the following if statements there is an bridged version of the player objects.
+            This since backend.py keeps the tournament players but 
+            GE and GP reuqires player objects according to their specs.
+            """
             if a[1] and b[1]:
+                #AI vs AI
                 AIplayer1 = g.PlayerAI(a[0],True,a[1])
                 AIplayer2 = g.PlayerAI(b[0],True,b[1])
-                AIGame = g.AIGame(AIplayer1,AIplayer2)
-                winner = AIGame.startGame()
-                self.report_winner(a[0],b[0],winner)
+                AIGame = g.GameEngine()
+                winner = AIGame.AIvsAI(AIplayer1,AIplayer2)
+                if a[1]:
+                    self.report_winner(a[0],b[0],winner)
+                else:
+                    self.report_winner(b[0],a[0],winner)
+                print ("Winner of this match is "+winner+"!")
                 time.sleep(5)
                                  
             elif a[1]:
