@@ -6,7 +6,7 @@ class PlayerAI:
         self.AIlevel = level
 
     def getPlayerName(self):
-        return self.name()
+        return self.name
 
     def setPlayerName(self, name):
         self.name=name
