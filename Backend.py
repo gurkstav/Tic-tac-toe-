@@ -288,7 +288,7 @@ class Backend(object):
     return leaderboard
 
   def calculateWinners(self):
-    leaderboard = self.getLeaderboard(self)
+    leaderboard = self.getLeaderboard()
     if leaderboard[0][4] != leaderboard[1][4]:
       self.winners = [leaderboard[0][0]]
     else:
