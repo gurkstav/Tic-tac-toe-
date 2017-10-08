@@ -218,6 +218,13 @@ class Backend(object):
     else:
       return self.scoreboard
 
+  def getWinner(self):
+    """
+    Designed for end-state of tournamnet play.
+    :return: The winner of the tournament.
+    """
+    return self.getLeaderboard()[0][0];
+    
   """getLeaferboard returns the leaderboard if the tournament is in progress. The leaderboard is a list of lists of the form playername, wins, draws, losses, score. The leaderboard is ordered according to 
      If the tournament is in progress, the leaderboard is returned. Else boolean, string is returned where the boolean is False and the string is a suitable error message."""
   def getLeaderboard(self):
