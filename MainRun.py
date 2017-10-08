@@ -92,23 +92,24 @@ class MainRun(object):
         self.main_menu = False
         self.change_name = False
         player1Name = self.tournament.backend.getPlayerName(1)
-        if answer == "p":
 
+        if answer == "p":
             print ("The new game "+player1Name+" vs. Player2 is going to start.")
             player1 = g.RealPlayer(player1Name, 'X')
             player2 = g.RealPlayer('Player2', 'O')
             #Returns winner but is not needed?
             g.Game(player1, player2).enter_game_loop()
-            time.sleep(5)                
+            time.sleep(5)
+            
         elif answer == "c":
             difficulty = self.tournament.set_difficulty(False,1)
             Playerone = g.PlayerAI(player1Name,False,3)
             tier = ["undef","Easy","Medium","Hard"]
             if difficulty:
-                #print ("The new game player vs. computer ("+
-                #tier[difficulty]+
-                #") is going to start.")
-                #time.sleep(10)
+                print ("The new game player vs. computer ("+
+                tier[difficulty]+
+                ") is going to start.")
+                time.sleep(3)
                 if difficulty == 1:
                     AIplayer1 = g.PlayerAI("AI",True,1)
                     AIdiff1 = g.AIGame(Playerone,AIplayer1)
@@ -124,6 +125,7 @@ class MainRun(object):
                     AIdiff3 = g.AIGame(Playerone,AIplayer3)
                     winner = AIdiff3.startGame()
                     time.sleep(5)                
+
         elif answer == "t":
             self.quit_game = self.tournament.Main()
          
