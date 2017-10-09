@@ -229,7 +229,7 @@ class Backend(object):
      If the tournament is in progress, the leaderboard is returned. Else boolean, string is returned where the boolean is False and the string is a suitable error message."""
   def getLeaderboard(self):
     if self.in_tournament is False:
-      return False, "No tournament to end!"
+      return False, "No tournament in progress!"
     else:
       leaderboard = []
       for x in range(0, len(self.player_list)):
@@ -240,23 +240,35 @@ class Backend(object):
         score = 0
         ptype = self.getPlayerType(x+1)
         """ 
-        compute score for home games 
+        compute vertically
+        """ 
+        for y in range(0, len(self.player_list)):
+          if self.scoreboard[x][y] == winner.home:
+            if x < y:
+              wins += 1
+            else: 
+              losses += 1
+          elif self.scoreboard[x][y] == winner.away:
+            if x < y:
+              losses += 1
+            else:
+              wins += 1
+          elif self.scoreboard[x][y] == winner.draw:
+            draws += 1
+        """ 
+        compute horizontally
         """ 
         for y in range(0, len(self.player_list)):
           if self.scoreboard[y][x] == winner.home:
-            wins += 1
+            if x < y:
+              wins += 1
+            else: 
+              losses += 1
           elif self.scoreboard[y][x] == winner.away:
-            losses += 1
-          elif self.scoreboard[y][x] == winner.draw:
-            draws += 1
-        """ 
-        compute score for away games 
-        """
-        for y in range(0, len(self.player_list)):
-          if self.scoreboard[x][y] == winner.home:
-            losses += 1
-          elif self.scoreboard[x][y] == winner.away:
-            wins += 1
+            if x < y:
+              losses += 1
+            else:
+              wins += 1
           elif self.scoreboard[y][x] == winner.draw:
             draws += 1
         """

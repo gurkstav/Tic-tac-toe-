@@ -169,7 +169,7 @@ class Backend(object):
               ainame = "AI" + str(ainum)
             else:
               break
-          print("Added AI player \"" + ainame + "\".")
+        #  print("Added AI player \"" + ainame + "\".")
           ainum += 1
         """ 
         Set up the empty table (full of 'winner.undef' because no matches have been played yet)
@@ -218,11 +218,18 @@ class Backend(object):
     else:
       return self.scoreboard
 
+  def getWinner(self):
+    """
+    Designed for end-state of tournamnet play.
+    :return: The winner of the tournament.
+    """
+    return self.getLeaderboard()[0][0];
+    
   """getLeaferboard returns the leaderboard if the tournament is in progress. The leaderboard is a list of lists of the form playername, wins, draws, losses, score. The leaderboard is ordered according to 
      If the tournament is in progress, the leaderboard is returned. Else boolean, string is returned where the boolean is False and the string is a suitable error message."""
   def getLeaderboard(self):
     if self.in_tournament is False:
-      return False, "No tournament to end!"
+      return False, "No tournament in progress!"
     else:
       leaderboard = []
       for x in range(0, len(self.player_list)):
@@ -233,23 +240,35 @@ class Backend(object):
         score = 0
         ptype = self.getPlayerType(x+1)
         """ 
-        compute score for home games 
+        compute vertically
+        """ 
+        for y in range(0, len(self.player_list)):
+          if self.scoreboard[x][y] == winner.home:
+            if x < y:
+              wins += 1
+            else: 
+              losses += 1
+          elif self.scoreboard[x][y] == winner.away:
+            if x < y:
+              losses += 1
+            else:
+              wins += 1
+          elif self.scoreboard[x][y] == winner.draw:
+            draws += 1
+        """ 
+        compute horizontally
         """ 
         for y in range(0, len(self.player_list)):
           if self.scoreboard[y][x] == winner.home:
-            wins += 1
+            if x < y:
+              wins += 1
+            else: 
+              losses += 1
           elif self.scoreboard[y][x] == winner.away:
-            losses += 1
-          elif self.scoreboard[y][x] == winner.draw:
-            draws += 1
-        """ 
-        compute score for away games 
-        """
-        for y in range(0, len(self.player_list)):
-          if self.scoreboard[x][y] == winner.home:
-            losses += 1
-          elif self.scoreboard[x][y] == winner.away:
-            wins += 1
+            if x < y:
+              losses += 1
+            else:
+              wins += 1
           elif self.scoreboard[y][x] == winner.draw:
             draws += 1
         """
@@ -281,7 +300,7 @@ class Backend(object):
     return leaderboard
 
   def calculateWinners(self):
-    leaderboard = self.getLeaderboard(self)
+    leaderboard = self.getLeaderboard()
     if leaderboard[0][4] != leaderboard[1][4]:
       self.winners = [leaderboard[0][0]]
     else:
@@ -325,7 +344,7 @@ class Backend(object):
     When press back, delete all players except main player.
     It is designed because main user can change his/her name whenever he/she want.
     """
-    self.player_list = [self.main_player]
+    self.player_list = [[self.main_player,playertype.human]]
     self.player_set = {self.main_player}
 
   def remainTournamentPlayer(self):
