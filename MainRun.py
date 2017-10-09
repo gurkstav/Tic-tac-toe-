@@ -98,7 +98,7 @@ class MainRun(object):
             player1 = g.RealPlayer(player1Name, 'X')
             player2 = g.RealPlayer('Player2', 'O')
             #Returns winner but is not needed?
-            g.Game(player1, player2).enter_game_loop()
+            g.Game(player1, player2, False).enter_game_loop()
             time.sleep(5)
             
         elif answer == "c":
@@ -108,7 +108,7 @@ class MainRun(object):
             if difficulty:
                # print ("The new game player vs. computer ("+
                 #tier[difficulty]+
-                #") is going to start.")
+                #") is going to start."
                 #time.sleep(3)
                 if difficulty == 1:
                     AIplayer1 = g.PlayerAI("AI",True,1)

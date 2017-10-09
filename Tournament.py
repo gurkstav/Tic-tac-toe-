@@ -257,7 +257,7 @@ class Tournament(object):
                 #a = AI
                 AIplayer1 = g.PlayerAI(a[0],True,a[1])
                 Playerone = g.PlayerAI(b[0],False,3)
-                PvAIGame = g.AIGame(Playerone,AIplayer1)
+                PvAIGame = g.AIGame(AIplayer1,Playerone)
                 winner = PvAIGame.startGame()
                 self.report_winner(b[0],a[0],winner)
                 time.sleep(5)                
@@ -273,7 +273,7 @@ class Tournament(object):
             else:
                 player1 = g.RealPlayer(a[0], 'X')
                 player2 = g.RealPlayer(b[0], 'O')
-                game = g.Game(player1, player2)
+                game = g.Game(player1, player2, True)
                 winner = game.enter_game_loop()
                 self.report_winner(a[0],b[0],winner)
                 time.sleep(5)                

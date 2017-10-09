@@ -104,7 +104,7 @@ class Game:
     Class for running the game logic and keeping track of game state
     """
 
-    def __init__(self, player1, player2):
+    def __init__(self, player1, player2, tournament):
 
         """
         init function for the Game class
@@ -112,9 +112,11 @@ class Game:
         :param arg1: Instance attributes
         :param arg2: player1 
         :param arg3: player2
+        :param arg4: Is this a tournament? (if so, P1 always starts for fairness reasons)
         :type arg1: self
         :type arg2: player
         :type arg3: player
+        :type arg4: boolean
         :return: None
         :rtype: NoneType
         """
@@ -123,12 +125,16 @@ class Game:
             raise TypeError
         self.players = [player1, player2]
         self.game_board = GameBoard()
-        self.current_player = self.who_plays_first()
+        if tournament is True:
+            self.current_player = self.players[0]
+        else:
+            self.current_player = self.who_plays_first()
 
     def enter_game_loop(self):
 
         """
         Loop until game is finished,return the winning player
+
         :return: Returns the winning player, 0 if draw
         :rtype: player 
         """
@@ -217,8 +223,12 @@ class AIGame:
                         break
                     else:
                         inputMove = self.askForMove(self.players[self.playerTurn-1].name, "Invalid move, input a new move: ")
-               
-                self.game_board.updateAIboard(inputMove, 'X')
+                playerChar = ' '
+                if self.playerTurn == 1:
+                    playerChar = 'X'
+                elif self.playerTurn == 2:
+                    playerChar = 'O'
+                self.game_board.updateAIboard(inputMove, playerChar)
             else:
                 self.game_board.AImove(self.players[self.playerTurn-1].getAIlevel(), self.playerTurn)
             Player_winner = self.game_board.is_there_a_winner_player()
@@ -453,26 +463,33 @@ class GameBoard:
         """
 
         AI = GameEngine()
-        if player != 1 and player != 2:
-            return 0
-
-        if AIlevel == 1:
-            AImove1 = AI.getAImove1(self)
-            self.updateAIboard(AImove1, 'O')
-            print("AI moved to position: ", AImove1)
-            return self.board
-        elif AIlevel == 2:
-            AImove2 = AI.getAImove2(player,self)
-            self.updateAIboard(AImove2, 'O')
-            print("AI moved to position: ", AImove2)
-            return self.board
-        elif AIlevel == 3:
-            AImove3 = AI.getAImove3(player,self)
-            self.updateAIboard(AImove3, 'O')
-            print("AI moved to position: ",AImove3)
-            return self.board
+        AIChar = ' '
+        if player == 1:
+            AIChar = 'X'
+        elif player == 2:
+            AIChar = 'O'
         else:
-            return 0
+            return False
+        AIBoard = deepcopy(self)
+        for x in range(0, 9):
+            if AIBoard.board[x] == 'X':
+                AIBoard.board[x] = 1
+            elif AIBoard.board[x] == 'O':
+                AIBoard.board[x] = 2
+            elif AIBoard.board[x] == ' ':
+                AIBoard.board[x] = 0
+        AIMove = 0
+        if AIlevel == 1:
+            AIMove = AI.getAImove1(self)
+        elif AIlevel == 2:
+            AIMove = AI.getAImove2(player,self)
+        elif AIlevel == 3:
+            AIMove = AI.getAImove3(player,self)
+        else:
+            return False
+        self.updateAIboard(AIMove, AIChar)
+        print("AI moved to position: ", AIMove)
+        return self.board
 
 
     def checkWinner(self):
@@ -604,14 +621,12 @@ class GameEngine():
         :rtype: bool
         """
         boardCopy = deepcopy(board)
-        ##player eller notPlayer
-        if player == 1:
+        if boardCopy.checkValidMove(i):
             boardCopy.board[i-1] = player
-            return player == 1 and boardCopy.checkWinner() == 1
-        elif player == 2:
-            boardCopy.board[i-1] = player
-            return player == 2 and boardCopy.checkWinner() == 1
-
+            return boardCopy.checkWinner()
+        else:
+            return False
+        
 
     def checkForkMove(self, board, player, i):
         """
