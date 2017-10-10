@@ -239,20 +239,22 @@ class AIGame:
                 print(self.game_board)
                 if self.tournament is True:
                     print ('Game: Player "{}" ({}) has won the game!'.format(self.players[self.playerTurn-1].name, self.players[self.playerTurn-1]))
+                    winner = self.players[self.playerTurn-1].name
                 else:
                     print("The Winner is " + self.players[Player_winner-1].name + "!")
                     print("Congratulations!")
-                winner = self.players[Player_winner-1].name
+                    winner = self.players[Player_winner-1].name
                 break
             if AI_winner != 0:
                 os.system('clear')  # on linux / os x
                 print(self.game_board)
                 if self.tournament is True:
                     print ('Game: Player "{}" ({}) has won the game!'.format(self.players[self.playerTurn-1].name, self.players[self.playerTurn-1]))
+                    winner = self.players[self.playerTurn-1].name
                 else:
                     print("The AI has won!")
                     print("Better luck next time")
-                winner = self.players[AI_winner-1].name
+                    winner = self.players[AI_winner-1].name
                 break
             if self.game_board.is_board_full():
                 os.system('clear')  # on linux / os x
