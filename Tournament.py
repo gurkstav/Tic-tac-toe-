@@ -245,8 +245,8 @@ class Tournament(object):
             """
             if a[1] and b[1]:
                 #AI vs AI
-                AIplayer1 = g.PlayerAI(a[0],True,a[1])
-                AIplayer2 = g.PlayerAI(b[0],True,b[1])
+                AIplayer1 = g.PlayerAI(a[0],True,a[1], 'X')
+                AIplayer2 = g.PlayerAI(b[0],True,b[1], 'O')
                 AIGame = g.GameEngine()
                 winner = AIGame.AIvsAI(AIplayer1,AIplayer2)
                 self.report_winner(a[0],b[0],winner)
@@ -255,18 +255,18 @@ class Tournament(object):
                                  
             elif a[1]:
                 #a = AI
-                AIplayer1 = g.PlayerAI(a[0],True,a[1])
-                Playerone = g.PlayerAI(b[0],False,3)
-                PvAIGame = g.AIGame(AIplayer1,Playerone)
+                AIplayer1 = g.PlayerAI(a[0],True,a[1], 'X')
+                Playerone = g.PlayerAI(b[0],False,3, 'O')
+                PvAIGame = g.AIGame(AIplayer1,Playerone,True)
                 winner = PvAIGame.startGame()
                 self.report_winner(b[0],a[0],winner)
                 time.sleep(5)                
 
             elif b[1]:
                 #b = AI
-                Playerone = g.PlayerAI(a[0],False,3)
-                AIplayer1 = g.PlayerAI(b[0],True,b[1])
-                PvAIGame = g.AIGame(Playerone,AIplayer1)
+                Playerone = g.PlayerAI(a[0],False,3, 'X')
+                AIplayer1 = g.PlayerAI(b[0],True,b[1], 'O')
+                PvAIGame = g.AIGame(Playerone,AIplayer1,True)
                 winner = PvAIGame.startGame()
                 self.report_winner(a[0],b[0],winner)
                 time.sleep(5)                

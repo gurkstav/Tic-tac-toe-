@@ -1,9 +1,13 @@
 class PlayerAI:
 
-    def __init__(self, name, isAI, level):
+    def __init__(self, name, isAI, level, piece_string):
         self.name = name
         self.isAI = isAI
         self.AIlevel = level
+        self.piece_string = piece_string
+
+    def __str__(self):
+        return(self.piece_string)
 
     def getPlayerName(self):
         return self.name

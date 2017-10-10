@@ -195,11 +195,12 @@ class AIGame:
     Class for running the game while playing vs an AI and keeping track of game state
     """
 
-    def __init__(self, player1, player2):
+    def __init__(self, player1, player2, tournament):
 
         self.players = [player1, player2]
         self.playerTurn = 1
-        self.game_board = GameBoard()  
+        self.game_board = GameBoard()
+        self.tournament = tournament
 
     """
     Main loop
@@ -236,15 +237,21 @@ class AIGame:
             if Player_winner != 0:
                 os.system('clear')  # on linux / os x
                 print(self.game_board)
-                print("The Winner is " + self.players[Player_winner-1].name + "!")
-                print("Congratulations!")
+                if self.tournament is True:
+                    print ('Game: Player "{}" ({}) has won the game!'.format(self.players[self.playerTurn-1].name, self.players[self.playerTurn-1]))
+                else:
+                    print("The Winner is " + self.players[Player_winner-1].name + "!")
+                    print("Congratulations!")
                 winner = self.players[Player_winner-1].name
                 break
             if AI_winner != 0:
                 os.system('clear')  # on linux / os x
                 print(self.game_board)
-                print("The AI has won!")
-                print("Better luck next time")
+                if self.tournament is True:
+                    print ('Game: Player "{}" ({}) has won the game!'.format(self.players[self.playerTurn-1].name, self.players[self.playerTurn-1]))
+                else:
+                    print("The AI has won!")
+                    print("Better luck next time")
                 winner = self.players[AI_winner-1].name
                 break
             if self.game_board.is_board_full():

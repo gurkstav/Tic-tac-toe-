@@ -103,7 +103,7 @@ class MainRun(object):
             
         elif answer == "c":
             difficulty = self.tournament.set_difficulty(False,1)
-            Playerone = g.PlayerAI(player1Name,False,3)
+            Playerone = g.PlayerAI(player1Name,False,3, 'X')
             tier = ["undef","Easy","Medium","Hard"]
             if difficulty:
                # print ("The new game player vs. computer ("+
@@ -111,18 +111,18 @@ class MainRun(object):
                 #") is going to start."
                 #time.sleep(3)
                 if difficulty == 1:
-                    AIplayer1 = g.PlayerAI("AI",True,1)
-                    AIdiff1 = g.AIGame(Playerone,AIplayer1)
+                    AIplayer1 = g.PlayerAI("AI",True,1, 'O')
+                    AIdiff1 = g.AIGame(Playerone,AIplayer1,False)
                     winner = AIdiff1.startGame()
                     time.sleep(5)                
                 elif difficulty == 2:
-                    AIplayer2 = g.PlayerAI("AI",True,2)
-                    AIdiff2 = g.AIGame(Playerone,AIplayer2)
+                    AIplayer2 = g.PlayerAI("AI",True,2, 'O')
+                    AIdiff2 = g.AIGame(Playerone,AIplayer2,False)
                     winner = AIdiff2.startGame()
                     time.sleep(5)                
                 elif difficulty == 3:
-                    AIplayer3 = g.PlayerAI("AI",True,3)
-                    AIdiff3 = g.AIGame(Playerone,AIplayer3)
+                    AIplayer3 = g.PlayerAI("AI",True,3, 'O')
+                    AIdiff3 = g.AIGame(Playerone,AIplayer3,False)
                     winner = AIdiff3.startGame()
                     time.sleep(5)                
 
